@@ -27,7 +27,7 @@ public class ResetToken {
     private LocalDateTime expireTime ;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "id")
     private User user ;
 
 }
