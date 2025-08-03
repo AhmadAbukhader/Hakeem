@@ -46,12 +46,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String email = null;
         String token = null;
 
-        if(StringUtils.hasText(requestHeader) && requestHeader.startsWith("Bearer")) {
+        if(StringUtils.hasText(requestHeader) && requestHeader.startsWith("Bearer ")) {
             //extract token from header
             token = requestHeader.substring(7);
             try{
                 //save username
-                email = this.jwtService.extractUsername(token);
+                email = jwtService.extractUsername(token);
 
             }catch (IllegalArgumentException e) {
                 logger.info("Illegal Argument while fetching the username !!");
