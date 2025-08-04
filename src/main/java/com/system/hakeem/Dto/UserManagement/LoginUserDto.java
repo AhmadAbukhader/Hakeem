@@ -1,4 +1,4 @@
-package com.system.hakeem.Dto;
+package com.system.hakeem.Dto.UserManagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

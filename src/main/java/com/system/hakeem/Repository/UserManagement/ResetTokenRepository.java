@@ -1,7 +1,7 @@
-package com.system.hakeem.Repository;
+package com.system.hakeem.Repository.UserManagement;
 
-import com.system.hakeem.Model.ResetToken;
-import com.system.hakeem.Model.User;
+import com.system.hakeem.Model.UserManagement.ResetToken;
+import com.system.hakeem.Model.UserManagement.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

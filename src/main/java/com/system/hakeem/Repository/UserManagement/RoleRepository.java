@@ -1,7 +1,7 @@
-package com.system.hakeem.Repository;
+package com.system.hakeem.Repository.UserManagement;
 
-import com.system.hakeem.Model.Role;
-import com.system.hakeem.Model.Type;
+import com.system.hakeem.Model.UserManagement.Role;
+import com.system.hakeem.Model.UserManagement.Type;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

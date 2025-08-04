@@ -1,4 +1,4 @@
-package com.system.hakeem.Dto.password;
+package com.system.hakeem.Dto.UserManagement.password;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -6,13 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResetPasswordRequest {
-    @JsonProperty("password")
-    private String newPassword;
-    @JsonProperty("token")
-    private String resetToken ;
+public class ForgotPasswordRequest {
+    @JsonProperty("username")
+    private String username;
+
 }

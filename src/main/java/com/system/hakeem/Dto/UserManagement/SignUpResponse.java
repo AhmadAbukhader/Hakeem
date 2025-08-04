@@ -1,6 +1,6 @@
-package com.system.hakeem.Dto;
+package com.system.hakeem.Dto.UserManagement;
 
-import com.system.hakeem.Model.Role;
+import com.system.hakeem.Model.UserManagement.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

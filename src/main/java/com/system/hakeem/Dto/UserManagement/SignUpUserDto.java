@@ -1,12 +1,12 @@
-package com.system.hakeem.Dto;
+package com.system.hakeem.Dto.UserManagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.system.hakeem.Model.Role;
-import com.system.hakeem.Model.Type;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data

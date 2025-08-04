@@ -1,14 +1,14 @@
-package com.system.hakeem.Service;
+package com.system.hakeem.Service.UserManagement;
 
-import com.system.hakeem.Dto.LoginResponse;
-import com.system.hakeem.Dto.LoginUserDto;
-import com.system.hakeem.Dto.SignUpUserDto;
-import com.system.hakeem.Dto.SignUpResponse;
-import com.system.hakeem.Model.Role;
-import com.system.hakeem.Model.Type;
-import com.system.hakeem.Model.User;
-import com.system.hakeem.Repository.RoleRepository;
-import com.system.hakeem.Repository.UserRepository;
+import com.system.hakeem.Dto.UserManagement.LoginResponse;
+import com.system.hakeem.Dto.UserManagement.LoginUserDto;
+import com.system.hakeem.Dto.UserManagement.SignUpUserDto;
+import com.system.hakeem.Dto.UserManagement.SignUpResponse;
+import com.system.hakeem.Model.UserManagement.Role;
+import com.system.hakeem.Model.UserManagement.Type;
+import com.system.hakeem.Model.UserManagement.User;
+import com.system.hakeem.Repository.UserManagement.RoleRepository;
+import com.system.hakeem.Repository.UserManagement.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

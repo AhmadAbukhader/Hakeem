@@ -1,4 +1,4 @@
-package com.system.hakeem.Service;
+package com.system.hakeem.Service.UserManagement;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

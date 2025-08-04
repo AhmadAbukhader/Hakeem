@@ -1,9 +1,12 @@
-package com.system.hakeem.Service;
+package com.system.hakeem.Service.UserManagement;
 
-import com.system.hakeem.Model.ResetToken;
-import com.system.hakeem.Model.User;
-import com.system.hakeem.Repository.ResetTokenRepository;
-import com.system.hakeem.Repository.UserRepository;
+import com.system.hakeem.Model.UserManagement.ResetCode;
+import com.system.hakeem.Model.UserManagement.ResetToken;
+import com.system.hakeem.Model.UserManagement.User;
+import com.system.hakeem.Repository.UserManagement.ResetCodeRepository;
+import com.system.hakeem.Repository.UserManagement.ResetTokenRepository;
+import com.system.hakeem.Repository.UserManagement.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,10 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
-public class ResetTokenService {
+public class ResetPasswordService {
 
     @Autowired
     private ResetTokenRepository resetTokenRepository;
@@ -25,6 +29,8 @@ public class ResetTokenService {
     private JavaMailSender mailSender ;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ResetCodeRepository resetCodeRepository;
 
     public void sendMail(String email , String token){
         String linkReset = "http://localhost:4200/reset-password?token=" + token;
@@ -32,7 +38,6 @@ public class ResetTokenService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("abukhaderahmad818@gmail.com");
         message.setTo(email);
-        message.setSubject("reset password");
         message.setSubject("Reset Password");
         message.setText("Reset Password Link " + linkReset);
 
@@ -42,7 +47,7 @@ public class ResetTokenService {
         mailSender.send(message);
     }
 
-    public void initiateResetPassword(String email){
+    public void sendCode (String email){
         Optional<User> userOptional = userRepository.findByUsername(email);
         if(userOptional.isEmpty()){
             System.out.println("User not found");
@@ -52,14 +57,48 @@ public class ResetTokenService {
 
         resetTokenRepository.deleteByUser(user);
 
+        int code = new Random().nextInt(900000);
+        ResetCode resetCode = ResetCode
+                .builder()
+                .code(code)
+                .expireTime(LocalDateTime.now().plusMinutes(10))
+                .user(user)
+                .build();
+        resetCodeRepository.save(resetCode);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("abukhaderahmad818@gmail.com");
+        message.setTo(email);
+        message.setSubject("reset password");
+        message.setText("this is you verification code " + code);
+
+        mailSender.send(message);
+
+    }
+
+    @Transactional
+    public void initiateResetPassword(String email , int code ){
+        Optional<ResetCode> codeOptional = resetCodeRepository.findByCode(code);
+        if(codeOptional.isEmpty()){
+            System.out.println("invalid code");
+        }
+
+        ResetCode resetCode = codeOptional.get();
+
+        if (resetCode.getExpireTime().isBefore(LocalDateTime.now())){
+            resetCodeRepository.delete(resetCode);
+            throw new RuntimeException("Reset token expired");
+        }
+
+        User user = resetCode.getUser();
+        resetCodeRepository.deleteByUser(user);
+
         String token = UUID.randomUUID().toString();
         ResetToken resetToken = ResetToken.builder()
                 .token(token)
                 .expireTime(LocalDateTime.now().plusMinutes(15))
                 .user(user)
                 .build();
-        System.out.println(resetToken.getExpireTime());
-
         resetTokenRepository.save(resetToken);
 
         sendMail(email, token);

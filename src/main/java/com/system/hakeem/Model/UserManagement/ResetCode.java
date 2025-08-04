@@ -1,28 +1,27 @@
-package com.system.hakeem.Model;
+package com.system.hakeem.Model.UserManagement;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.system.hakeem.Model.User;
 
 import java.time.LocalDateTime;
 
-@Table(name = "reset_token")
+@Table(name = "reset_code")
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResetToken {
+public class ResetCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id ;
 
-    @Column(name = "token")
-    private String token ;
+    @Column(name = "code")
+    private int code ;
 
     @Column(name = "expiration_time")
     private LocalDateTime expireTime ;

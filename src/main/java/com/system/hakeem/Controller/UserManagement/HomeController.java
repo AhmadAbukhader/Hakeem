@@ -1,7 +1,7 @@
-package com.system.hakeem.Controller;
+package com.system.hakeem.Controller.UserManagement;
 
-import com.system.hakeem.Model.User;
-import com.system.hakeem.Service.UserService;
+import com.system.hakeem.Model.UserManagement.User;
+import com.system.hakeem.Service.UserManagement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

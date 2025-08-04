@@ -1,4 +1,4 @@
-package com.system.hakeem.Model;
+package com.system.hakeem.Model.UserManagement;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,6 +1,6 @@
 package com.system.hakeem.Security;
 
-import com.system.hakeem.Repository.UserRepository;
+import com.system.hakeem.Repository.UserManagement.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
