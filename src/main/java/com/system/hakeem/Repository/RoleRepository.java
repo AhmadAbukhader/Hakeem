@@ -1,4 +1,4 @@
-package com.system.hakeem.Repositories;
+package com.system.hakeem.Repository;
 
 import com.system.hakeem.Model.Role;
 import com.system.hakeem.Model.Type;

@@ -1,7 +1,6 @@
 package com.system.hakeem.Controller;
 
 import com.system.hakeem.Model.User;
-import com.system.hakeem.Repositories.UserRepository;
 import com.system.hakeem.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
