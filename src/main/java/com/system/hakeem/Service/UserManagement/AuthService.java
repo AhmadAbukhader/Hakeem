@@ -41,7 +41,7 @@ public class AuthService {
                 .name(inputUser.getName())
                 .role(role)
                 .age(inputUser.getAge())
-                .phNum(inputUser.getPhNum())
+                .phoneNumber(inputUser.getPhNum())
                 .dob(inputUser.getDob())
                 .bloodType(inputUser.getBloodType())
                 .gender(inputUser.getGender())

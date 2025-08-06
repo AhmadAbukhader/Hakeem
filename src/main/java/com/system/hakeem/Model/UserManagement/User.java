@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private Integer weight;
 
     @Column(name = "ph_num")
-    private Long phNum;
+    private Long phoneNumber;
 
     private String specialization;
     private Integer license;

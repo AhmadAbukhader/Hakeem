@@ -1,5 +1,7 @@
 package com.system.hakeem.Service.AppointmentSystem;
 
+import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentsDto;
+import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
 import com.system.hakeem.Model.AppointmentSystem.Appointment;
 import com.system.hakeem.Model.AppointmentSystem.AppointmentStatus;
 import com.system.hakeem.Model.AppointmentSystem.AppointmentType;
@@ -10,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -21,9 +25,16 @@ public class AppointmentService {
     @Autowired
     private DoctorRatingRepository doctorRatingRepository;
 
-    public void doctorInsert (LocalDateTime appDateTime){
+    public void doctorInsert (LocalDateTime appDateTime) throws DuplicateKeyException {
+        Appointment app = appointmentRepository.findByAppointmentDate(appDateTime);
+        if (app != null) {
+            throw new DuplicateKeyException("this appointment already exist");
+        }
+
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
+
         Appointment appointment = Appointment
                 .builder()
                 .doctor(user)
@@ -39,6 +50,10 @@ public class AppointmentService {
         User user = (User) auth.getPrincipal();
 
         Appointment appointment = appointmentRepository.findByAppointmentDate(appDateTime);
+
+        if (appointment == null)
+            throw new IllegalArgumentException("appointment not found");
+
         appointment.setAppointmentDate(appDateTime);
         appointment.setIsAvailable(false);
         appointment.setPatient(user);
@@ -58,6 +73,53 @@ public class AppointmentService {
 
     public List<Appointment> getAllScheduledApps(){
         return appointmentRepository.findByIsAvailable(false);
+    }
+
+    public List<PatientAppointmentsDto> getPatientApps() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        List<Appointment> appointments = appointmentRepository.findByPatientId(user.getId());
+        List<PatientAppointmentsDto> patientAppointments = appointments.stream().map(
+                app -> PatientAppointmentsDto
+                        .builder()
+                        .id(app.getId())
+                        .doctorId(app.getDoctor().getId())
+                        .patientId(app.getPatient().getId())
+                        .doctorName(app.getDoctor().getName())
+                        .patientName(app.getPatient().getName())
+                        .doctorUsername(app.getDoctor().getUsername())
+                        .patientUsername(app.getPatient().getUsername())
+                        .doctorLocation(app.getDoctor().getLocation())
+                        .appointmentDate(app.getAppointmentDate())
+                        .appointmentType(app.getAppType())
+                        .appointmentStatus(app.getStatus())
+                        .build()
+        ).collect(Collectors.toList());
+        return patientAppointments;
+    }
+
+    public List<DoctorAppointmentsDto> getDoctorApps() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(user.getId());
+
+        List<DoctorAppointmentsDto> doctorAppointments = appointments.stream().map(
+                app -> DoctorAppointmentsDto
+                        .builder()
+                        .id(app.getId())
+                        .doctorId(app.getDoctor().getId())
+                        .patientId(app.getPatient().getId())
+                        .doctorName(app.getDoctor().getName())
+                        .patientName(app.getPatient().getName())
+                        .doctorUsername(app.getDoctor().getUsername())
+                        .patientUsername(app.getPatient().getUsername())
+                        .appointmentDate(app.getAppointmentDate())
+                        .appointmentType(app.getAppType())
+                        .appointmentStatus(app.getStatus())
+                        .build()
+        ).collect(Collectors.toList());
+
+        return doctorAppointments ;
     }
 
 }

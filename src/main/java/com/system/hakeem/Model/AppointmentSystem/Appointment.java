@@ -30,11 +30,11 @@ public class Appointment {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "APPType", nullable = false)
+    @Column(name = "APPType")
     private AppointmentType appType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "Status", nullable = false)
+    @Column(name = "Status")
     private AppointmentStatus status;
 
     @ManyToOne

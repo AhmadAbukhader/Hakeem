@@ -1,12 +1,13 @@
-package com.system.hakeem.Dto.AppointmentSystem;
+package com.system.hakeem.Dto.AppointmentSystem.Doctor;
 
-import com.system.hakeem.Model.AppointmentSystem.AppointmentType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
 public class DoctorAppointmentScheduleRequest {
+    @JsonProperty("appointment_date")
     private LocalDateTime appointmentDateTime;
 }
 

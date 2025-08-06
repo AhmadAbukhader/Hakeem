@@ -39,13 +39,13 @@ public class AuthController {
         return ResponseEntity.ok(authenticatedUser);
     }
 
-    @PostMapping("/forgot_password/code")
+    @PostMapping("/forgot-password/code")
     public ResponseEntity<String> forgotPasswordCode(@RequestBody ForgotPasswordRequest request){
         resetPasswordService.sendCode(request.getUsername());
         return ResponseEntity.ok("the verification code has been sent");
     }
 
-    @PostMapping("/forgot_password/token")
+    @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPasswordToken(@RequestBody ForgotPasswordCodeRequest request){
         resetPasswordService.initiateResetPassword(request.getUsername() , request.getCode());
         return ResponseEntity.ok("the reset token has been initiated");
