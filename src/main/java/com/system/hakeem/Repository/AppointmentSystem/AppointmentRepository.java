@@ -25,4 +25,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     void deleteById(int id);
 
     List<Appointment> findByIsAvailable(Boolean isAvailable);
+
+    List<Appointment> findByIsAvailableAndDoctorId(Boolean isAvailable , int doctorId);
 }

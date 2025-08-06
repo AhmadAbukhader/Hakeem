@@ -67,12 +67,14 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
-    public List<Appointment> getAllAvailableApps(){
-        return appointmentRepository.findByIsAvailable(true);
+    public List<Appointment> getAllAvailableApps(int id){
+        return appointmentRepository.findByIsAvailableAndDoctorId(true , id);
     }
 
     public List<Appointment> getAllScheduledApps(){
-        return appointmentRepository.findByIsAvailable(false);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User doctor = (User) auth.getPrincipal();
+        return appointmentRepository.findByIsAvailableAndDoctorId(false , doctor.getId() );
     }
 
     public List<PatientAppointmentsDto> getPatientApps() {
