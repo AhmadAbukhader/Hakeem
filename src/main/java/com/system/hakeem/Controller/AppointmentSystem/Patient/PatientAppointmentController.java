@@ -40,10 +40,10 @@ public class PatientAppointmentController {
 
     //patient can get all the doctors or filter them depending on specialty or location or both
     @GetMapping("/patient/doctors")
-    @PreAuthorize("hasAnyRole('DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<List<DoctorDto>> getDoctors(
-            @RequestParam String location ,
-            @RequestParam String specialization ,
+            @RequestParam(required = false) String location ,
+            @RequestParam(required = false) String specialization ,
             Pageable pageable) {
         List<DoctorDto> doctors = userService.getDoctors(location , specialization , pageable);
         return ResponseEntity.ok().body(doctors);

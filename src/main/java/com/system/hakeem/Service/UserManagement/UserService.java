@@ -51,9 +51,9 @@ public class UserService {
                         .username(user.getUsername())
                         .dob(user.getDob())
                         .age(user.getAge())
-                        .phoneNumber(user.getPhoneNumber())
-                        .specialization(specialization)
-                        .location(location)
+                        .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber().longValue() : 0L)
+                        .specialization(user.getSpecialization())
+                        .location(user.getLocation())
                         .gender(user.getGender())
                         .build()
         ).collect(Collectors.toList());
