@@ -1,18 +1,16 @@
 package com.system.hakeem.Service.AppointmentSystem;
 
-import com.system.hakeem.Dto.AppointmentSystem.RatingDTO;
+import com.system.hakeem.Dto.AppointmentSystem.Rating.RatingDTO;
 import com.system.hakeem.Model.AppointmentSystem.DoctorRating;
 import com.system.hakeem.Model.UserManagement.User;
 import com.system.hakeem.Repository.AppointmentSystem.AppointmentRepository;
 import com.system.hakeem.Repository.AppointmentSystem.DoctorRatingRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
-import com.system.hakeem.Service.UserManagement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

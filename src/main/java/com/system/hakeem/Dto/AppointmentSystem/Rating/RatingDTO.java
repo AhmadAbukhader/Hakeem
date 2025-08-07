@@ -1,5 +1,6 @@
-package com.system.hakeem.Dto.AppointmentSystem;
+package com.system.hakeem.Dto.AppointmentSystem.Rating;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RatingDTO {
+    @JsonProperty("rating")
     private int rating;
-    private LocalDate ratedAt ;
+    @JsonProperty("description")
     private String description;
+    @JsonProperty("rated_at")
+    private LocalDate ratedAt;
+    @JsonProperty("username")
     private String username ;
 }

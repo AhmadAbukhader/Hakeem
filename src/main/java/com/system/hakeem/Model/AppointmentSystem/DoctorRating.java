@@ -20,21 +20,21 @@ public class DoctorRating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description")
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "rating", nullable = false)
     private Integer rating; // between 1-5
 
-    @Column(name = "ratedAt", nullable = false)
+    @Column(name = "rated_at")
     private LocalDate ratedAt;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private User patient;
 
     @ManyToOne
-    @JoinColumn(name = "Doctor_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Doctor_id", referencedColumnName = "id")
     private User doctor;
 
 }

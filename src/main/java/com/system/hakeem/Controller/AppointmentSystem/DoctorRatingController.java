@@ -1,8 +1,7 @@
 package com.system.hakeem.Controller.AppointmentSystem;
 
-import com.system.hakeem.Dto.AppointmentSystem.RatingDTO;
+import com.system.hakeem.Dto.AppointmentSystem.Rating.RatingDTO;
 import com.system.hakeem.Service.AppointmentSystem.DoctorRatingService;
-import com.system.hakeem.Service.UserManagement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
