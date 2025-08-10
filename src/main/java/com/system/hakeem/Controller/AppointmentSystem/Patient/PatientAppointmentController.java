@@ -6,6 +6,7 @@ import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
 import com.system.hakeem.Service.AppointmentSystem.AppointmentService;
 import com.system.hakeem.Service.UserManagement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,15 +38,22 @@ public class PatientAppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
-
-    //patient can get all the doctors or filter them depending on specialty or location or both
-    @GetMapping("/patient/doctors")
+    // if the user want to cancel an appointment he could cancel it with this
+    @PutMapping("/patient/cancel")
     @PreAuthorize("hasAnyRole('PATIENT')")
-    public ResponseEntity<List<DoctorDto>> getDoctors(
+    public ResponseEntity<PatientAppointmentsDto> cancelAppointment(@RequestParam int appointmentId) {
+        PatientAppointmentsDto appointment = appointmentService.cancelAppointment(appointmentId);
+        return ResponseEntity.ok().body(appointment);
+    }
+
+    @GetMapping("/patient/doctors/rated")
+    @PreAuthorize("hasAnyRole('PATIENT')")
+    public ResponseEntity<List<DoctorDto>> getDoctorsRated(
             @RequestParam(required = false) String location ,
             @RequestParam(required = false) String specialization ,
+            @RequestParam(required = false) Boolean rated,
             Pageable pageable) {
-        List<DoctorDto> doctors = userService.getDoctors(location , specialization , pageable);
+        List<DoctorDto> doctors = userService.getDoctors(location , specialization ,rated ,pageable);
         return ResponseEntity.ok().body(doctors);
     }
 

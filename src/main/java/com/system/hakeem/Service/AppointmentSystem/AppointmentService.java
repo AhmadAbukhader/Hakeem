@@ -124,4 +124,41 @@ public class AppointmentService {
         return doctorAppointments ;
     }
 
+    public PatientAppointmentsDto cancelAppointment(int appointmentId){
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        appointment.setStatus(AppointmentStatus.Cancelled);
+        appointmentRepository.save(appointment);
+        return PatientAppointmentsDto.builder()
+                .id(appointment.getId())
+                .doctorId(appointment.getDoctor().getId())
+                .patientId(appointment.getPatient().getId())
+                .doctorName(appointment.getDoctor().getName())
+                .patientName(appointment.getPatient().getName())
+                .doctorUsername(appointment.getDoctor().getUsername())
+                .patientUsername(appointment.getPatient().getUsername())
+                .doctorLocation(appointment.getDoctor().getLocation())
+                .appointmentDate(appointment.getAppointmentDate())
+                .appointmentType(appointment.getAppType())
+                .appointmentStatus(appointment.getStatus())
+                .build();
+    }
+
+    public DoctorAppointmentsDto updateCompletedAppointment(int appointmentId){
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        appointment.setStatus(AppointmentStatus.Completed);
+        appointmentRepository.save(appointment);
+        return DoctorAppointmentsDto.builder()
+                .id(appointment.getId())
+                .doctorId(appointment.getDoctor().getId())
+                .patientId(appointment.getPatient().getId())
+                .doctorName(appointment.getDoctor().getName())
+                .patientName(appointment.getPatient().getName())
+                .doctorUsername(appointment.getDoctor().getUsername())
+                .patientUsername(appointment.getPatient().getUsername())
+                .appointmentDate(appointment.getAppointmentDate())
+                .appointmentType(appointment.getAppType())
+                .appointmentStatus(appointment.getStatus())
+                .build();
+    }
+
 }

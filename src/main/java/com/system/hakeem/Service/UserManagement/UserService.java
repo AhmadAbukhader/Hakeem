@@ -4,15 +4,14 @@ import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorDto;
 import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;
-import com.system.hakeem.Repository.UserManagement.RoleRepository;
+import com.system.hakeem.Repository.AppointmentSystem.DoctorRatingRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,9 +19,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private RoleRepository roleRepository;
+    private DoctorRatingRepository doctorRatingRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -30,10 +27,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<DoctorDto> getDoctors(String location , String specialization , Pageable pageable){
+    public List<DoctorDto> getDoctors(String location , String specialization, Boolean rated, Pageable pageable){
         Role role = Role.builder().id(2).role(Type.DOCTOR).build();
-        List<DoctorDto> doctors = null ;
-        Page<User> users = null ;
+        List<DoctorDto> doctors = null;
+        Page<User> users = null;
 
         if (location == null && specialization == null){
              users = userRepository.findAllByRole(role , pageable);
@@ -46,6 +43,9 @@ public class UserService {
         }
         doctors = users.stream().map(
                 user -> DoctorDto.builder()
+                        .rating(doctorRatingRepository.findAverageRatingByDoctorId(user.getId())
+                                != null ?
+                                doctorRatingRepository.findAverageRatingByDoctorId(user.getId()) : 0 )
                         .doctorId(user.getId())
                         .doctorName(user.getName())
                         .username(user.getUsername())
@@ -57,8 +57,11 @@ public class UserService {
                         .gender(user.getGender())
                         .build()
         ).collect(Collectors.toList());
+
+        if (rated != null && rated)
+            doctors.sort(Comparator.comparingDouble(DoctorDto::getRating).reversed());
+
         return doctors;
     }
-
 
 }

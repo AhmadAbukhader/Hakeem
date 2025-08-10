@@ -2,6 +2,7 @@ package com.system.hakeem.Controller.AppointmentSystem.Doctor;
 
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentScheduleRequest;
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentsDto;
+import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
 import com.system.hakeem.Model.AppointmentSystem.Appointment;
 import com.system.hakeem.Service.AppointmentSystem.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class DoctorAppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
+    // getting all appointments scheduled by patients and doctors
     @GetMapping("/doctors/scheduled")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public ResponseEntity<List<Appointment>> getDoctorsScheduled() {
@@ -25,6 +27,7 @@ public class DoctorAppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
+    // opening slots for scheduling by user
     @PostMapping("/doctor/schedule")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public ResponseEntity<DoctorAppointmentScheduleRequest> doctorSchedule(@RequestBody DoctorAppointmentScheduleRequest request) {
@@ -33,6 +36,7 @@ public class DoctorAppointmentController {
     }
 
 
+    //get a doctor all his appointment
     @GetMapping("/doctor/scheduled")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public ResponseEntity<List<DoctorAppointmentsDto>> getDoctorScheduled() {
@@ -40,5 +44,11 @@ public class DoctorAppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
+    @PutMapping("/doctor/complete")
+    @PreAuthorize("hasAnyRole('DOCTOR')")
+    public ResponseEntity<DoctorAppointmentsDto> doctorCompletedAppointment (@RequestParam int appointmentId) {
+        DoctorAppointmentsDto appointment = appointmentService.updateCompletedAppointment(appointmentId);
+        return ResponseEntity.ok().body(appointment);
+    }
 
 }

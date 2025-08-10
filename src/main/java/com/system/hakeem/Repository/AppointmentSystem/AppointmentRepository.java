@@ -18,11 +18,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     List<Appointment> findByDoctorId(int doctorId);
 
-    @Query(value = "SELECT * FROM appointment WHERE appointment_date BETWEEN :startDate AND :endDate", nativeQuery = true)
-    List<Appointment> findByAppointmentDateBetweenNative(@Param("startDate") LocalDateTime startDate,
-                                                             @Param("endDate") LocalDateTime endDate);
-
-    void deleteById(int id);
+    Appointment findById(int id);
 
     List<Appointment> findByIsAvailable(Boolean isAvailable);
 
