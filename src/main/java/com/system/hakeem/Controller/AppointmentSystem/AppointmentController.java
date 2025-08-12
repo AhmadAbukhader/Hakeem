@@ -2,6 +2,7 @@ package com.system.hakeem.Controller.AppointmentSystem;
 
 import com.system.hakeem.Model.AppointmentSystem.Appointment;
 import com.system.hakeem.Service.AppointmentSystem.AppointmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appointment")
+@RequiredArgsConstructor
 public class AppointmentController {
 
-    @Autowired
-    private AppointmentService appointmentService;
+    private final AppointmentService appointmentService;
 
     @GetMapping()
     public ResponseEntity<List<Appointment>> getAllAppointments() {

@@ -5,6 +5,7 @@ import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentSchedul
 import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
 import com.system.hakeem.Service.AppointmentSystem.AppointmentService;
 import com.system.hakeem.Service.UserManagement.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,12 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appointment")
+@RequiredArgsConstructor
 public class PatientAppointmentController {
 
-    @Autowired
-    private AppointmentService appointmentService;
-    @Autowired
-    private UserService userService;
+    private final AppointmentService appointmentService;
+    private final UserService userService;
 
     // patient
     @PostMapping("/patient/schedule")

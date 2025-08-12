@@ -2,6 +2,7 @@ package com.system.hakeem.Controller.AppointmentSystem;
 
 import com.system.hakeem.Dto.AppointmentSystem.Rating.RatingDTO;
 import com.system.hakeem.Service.AppointmentSystem.DoctorRatingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,10 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/doctor")
+@RequiredArgsConstructor
 public class DoctorRatingController {
 
-    @Autowired
-    private DoctorRatingService doctorRatingService;
+    private final DoctorRatingService doctorRatingService;
 
     @PostMapping("/rate")
     @PreAuthorize("hasAnyRole('PATIENT')")

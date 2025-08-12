@@ -3,7 +3,6 @@ package com.system.hakeem.Service.AppointmentSystem;
 import com.system.hakeem.Dto.AppointmentSystem.Rating.RatingDTO;
 import com.system.hakeem.Model.AppointmentSystem.DoctorRating;
 import com.system.hakeem.Model.UserManagement.User;
-import com.system.hakeem.Repository.AppointmentSystem.AppointmentRepository;
 import com.system.hakeem.Repository.AppointmentSystem.DoctorRatingRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,9 @@ import java.util.stream.Collectors;
 public class DoctorRatingService {
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
-    @Autowired
     private DoctorRatingRepository doctorRatingRepository;
     @Autowired
     private UserRepository userRepository;
-
 
     public void rate(RatingDTO ratingDTO){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -54,7 +50,8 @@ public class DoctorRatingService {
         }
 
         List<DoctorRating> doctorRatings = doctorRatingRepository.findByDoctorId(doctor.get().getId());
-        List<RatingDTO> ratingDTOs = doctorRatings.stream().map(
+
+        return doctorRatings.stream().map(
                 e -> RatingDTO.builder()
                         .ratedAt(e.getRatedAt())
                         .rating(e.getRating())
@@ -62,8 +59,6 @@ public class DoctorRatingService {
                         .username(e.getPatient().getUsername())
                         .build()
         ).collect(Collectors.toList());
-
-        return ratingDTOs ;
     }
 
 }

@@ -7,6 +7,7 @@ import com.system.hakeem.Repository.UserManagement.ResetCodeRepository;
 import com.system.hakeem.Repository.UserManagement.ResetTokenRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,18 +20,14 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ResetPasswordService {
 
-    @Autowired
-    private ResetTokenRepository resetTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JavaMailSender mailSender ;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ResetCodeRepository resetCodeRepository;
+    private final ResetTokenRepository resetTokenRepository;
+    private final UserRepository userRepository;
+    private final JavaMailSender mailSender ;
+    private final PasswordEncoder passwordEncoder;
+    private final ResetCodeRepository resetCodeRepository;
 
     public void sendMail(String email , String token){
         String linkReset = "http://localhost:4200/reset-password?token=" + token;

@@ -6,6 +6,7 @@ import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;
 import com.system.hakeem.Repository.AppointmentSystem.DoctorRatingRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,27 +17,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private DoctorRatingRepository doctorRatingRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final DoctorRatingRepository doctorRatingRepository;
+    private final UserRepository userRepository;
 
-    public List<User> allUsers(){
-        return userRepository.findAll();
-    }
 
     public List<DoctorDto> getDoctors(String location , String specialization, Boolean rated, Pageable pageable){
         Role role = Role.builder().id(2).role(Type.DOCTOR).build();
-        List<DoctorDto> doctors = null;
-        Page<User> users = null;
+        List<DoctorDto> doctors;
+        Page<User> users;
 
         if (location == null && specialization == null){
              users = userRepository.findAllByRole(role , pageable);
-        }else if (location == null && specialization != null) {
+        }else if (location == null) {
             users = userRepository.findAllByRoleAndSpecialization(role, specialization , pageable);
-        }else if (location != null && specialization == null){
+        }else if (specialization == null){
             users = userRepository.findAllByRoleAndLocation(role, location ,pageable);
         }else{
             users = userRepository.findAllByRoleAndSpecializationAndLocation(role, specialization, location , pageable);
@@ -51,7 +48,7 @@ public class UserService {
                         .username(user.getUsername())
                         .dob(user.getDob())
                         .age(user.getAge())
-                        .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber().longValue() : 0L)
+                        .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
                         .specialization(user.getSpecialization())
                         .location(user.getLocation())
                         .gender(user.getGender())

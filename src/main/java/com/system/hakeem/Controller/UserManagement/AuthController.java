@@ -11,19 +11,19 @@ import com.system.hakeem.Dto.UserManagement.password.ResetPasswordRequest;
 import com.system.hakeem.Service.UserManagement.AuthService;
 import com.system.hakeem.Service.UserManagement.JwtService;
 import com.system.hakeem.Service.UserManagement.ResetPasswordService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private AuthService authService;
-    @Autowired
-    private ResetPasswordService resetPasswordService;
+
+    private final JwtService jwtService;
+    private final AuthService authService;
+    private final ResetPasswordService resetPasswordService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signUp (@RequestBody SignUpUserDto request){
@@ -52,7 +52,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/reset_password")
+    @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword (@RequestBody ResetPasswordRequest request){
         try{
             resetPasswordService.resetPassword(request.getNewPassword() , request.getResetToken());

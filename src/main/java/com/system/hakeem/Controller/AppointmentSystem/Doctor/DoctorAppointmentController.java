@@ -5,6 +5,7 @@ import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentsDto;
 import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
 import com.system.hakeem.Model.AppointmentSystem.Appointment;
 import com.system.hakeem.Service.AppointmentSystem.AppointmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,10 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appointment")
+@RequiredArgsConstructor
 public class DoctorAppointmentController {
 
-    @Autowired
-    private AppointmentService appointmentService;
+    private final AppointmentService appointmentService;
 
     // getting all appointments scheduled by patients and doctors
     @GetMapping("/doctors/scheduled")

@@ -7,7 +7,6 @@ import com.system.hakeem.Model.AppointmentSystem.AppointmentStatus;
 import com.system.hakeem.Model.AppointmentSystem.AppointmentType;
 import com.system.hakeem.Model.UserManagement.User;
 import com.system.hakeem.Repository.AppointmentSystem.AppointmentRepository;
-import com.system.hakeem.Repository.AppointmentSystem.DoctorRatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +21,6 @@ import java.util.stream.Collectors;
 public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
-    @Autowired
-    private DoctorRatingRepository doctorRatingRepository;
 
     public void doctorInsert (LocalDateTime appDateTime) throws DuplicateKeyException {
         Appointment app = appointmentRepository.findByAppointmentDate(appDateTime);
@@ -81,7 +78,7 @@ public class AppointmentService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         List<Appointment> appointments = appointmentRepository.findByPatientId(user.getId());
-        List<PatientAppointmentsDto> patientAppointments = appointments.stream().map(
+        return appointments.stream().map(
                 app -> PatientAppointmentsDto
                         .builder()
                         .id(app.getId())
@@ -97,7 +94,6 @@ public class AppointmentService {
                         .appointmentStatus(app.getStatus())
                         .build()
         ).collect(Collectors.toList());
-        return patientAppointments;
     }
 
     public List<DoctorAppointmentsDto> getDoctorApps() {
@@ -105,7 +101,7 @@ public class AppointmentService {
         User user = (User) auth.getPrincipal();
         List<Appointment> appointments = appointmentRepository.findByDoctorId(user.getId());
 
-        List<DoctorAppointmentsDto> doctorAppointments = appointments.stream().map(
+        return appointments.stream().map(
                 app -> DoctorAppointmentsDto
                         .builder()
                         .id(app.getId())
@@ -120,8 +116,6 @@ public class AppointmentService {
                         .appointmentStatus(app.getStatus())
                         .build()
         ).collect(Collectors.toList());
-
-        return doctorAppointments ;
     }
 
     public PatientAppointmentsDto cancelAppointment(int appointmentId){
