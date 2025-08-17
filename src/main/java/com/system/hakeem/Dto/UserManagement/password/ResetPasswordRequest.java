@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResetPasswordRequest {
+    @JsonProperty("username")
+    private String email;
+
     @JsonProperty("password")
     private String newPassword;
-    @JsonProperty("token")
-    private String resetToken ;
+
+    @JsonProperty("code")
+    private String code ;
 }

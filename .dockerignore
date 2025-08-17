@@ -1,0 +1,21 @@
+# Ignore build artifacts
+target/
+!target/*.jar
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore IDE settings
+*.iml
+.idea/
+.vscode/
+
+# Ignore logs and temp files
+*.log
+tmp/
+*.tmp
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
