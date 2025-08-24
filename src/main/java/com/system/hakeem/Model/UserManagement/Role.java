@@ -3,12 +3,12 @@ package com.system.hakeem.Model.UserManagement;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "role")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(schema = "hakeem_schema" , name = "user_role" )
 public class Role {
 
     @Id

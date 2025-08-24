@@ -24,19 +24,15 @@ public class UserService {
     private final UserRepository userRepository;
 
 
-    public List<DoctorDto> getDoctors(String location , String specialization, Boolean rated, Pageable pageable){
+    public List<DoctorDto> getDoctors( String specialization, Boolean rated, Pageable pageable){
         Role role = Role.builder().id(2).role(Type.DOCTOR).build();
         List<DoctorDto> doctors;
         Page<User> users;
 
-        if (location == null && specialization == null){
+        if (specialization == null){
              users = userRepository.findAllByRole(role , pageable);
-        }else if (location == null) {
-            users = userRepository.findAllByRoleAndSpecialization(role, specialization , pageable);
-        }else if (specialization == null){
-            users = userRepository.findAllByRoleAndLocation(role, location ,pageable);
         }else{
-            users = userRepository.findAllByRoleAndSpecializationAndLocation(role, specialization, location , pageable);
+            users = userRepository.findAllByRoleAndSpecialization(role, specialization , pageable);
         }
         doctors = users.stream().map(
                 user -> DoctorDto.builder()

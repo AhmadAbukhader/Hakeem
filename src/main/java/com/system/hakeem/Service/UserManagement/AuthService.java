@@ -4,17 +4,23 @@ import com.system.hakeem.Dto.UserManagement.LoginResponse;
 import com.system.hakeem.Dto.UserManagement.LoginUserDto;
 import com.system.hakeem.Dto.UserManagement.SignUpUserDto;
 import com.system.hakeem.Dto.UserManagement.SignUpResponse;
+import com.system.hakeem.Model.EmergencySystem.AmbulanceUnit;
 import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;
+import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
 import com.system.hakeem.Repository.UserManagement.RoleRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final GeometryFactory geometryFactory;
+    private final AmbulanceUnitRepository ambulanceUnitRepository;
+
 
     public SignUpResponse signUp(SignUpUserDto inputUser) {
 
@@ -32,6 +41,9 @@ public class AuthService {
         if(role == null){
             role = roleRepository.save(new Role(Type.valueOf(inputUser.getRole())));
         }
+
+        Point point = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(inputUser.getLongitude(), inputUser.getLongitude()));
+        point.setSRID(4326);
 
         User user = User.builder()
                 .username(inputUser.getUsername())
@@ -44,7 +56,7 @@ public class AuthService {
                 .bloodType(inputUser.getBloodType())
                 .gender(inputUser.getGender())
                 .license(inputUser.getLicense())
-                .location(inputUser.getLocation())
+                .location(point)
                 .specialization(inputUser.getSpecialization())
                 .weight(inputUser.getWeight())
                 .build();

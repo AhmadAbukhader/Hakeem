@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity(name = "Appointment")
+@Entity
+@Table(schema = "hakeem_schema" , name = "Appointment")
 @Data
 @Builder
 @NoArgsConstructor

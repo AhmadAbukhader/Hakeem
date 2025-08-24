@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,8 +48,11 @@ public class SignUpUserDto {
     @JsonProperty("license")
     private Integer license;
 
-    @JsonProperty("location")
-    private String location;
+    @JsonProperty("y")
+    private double longitude;
+
+    @JsonProperty("x")
+    private double latitude;
 
     @JsonProperty("role")
     private String role;

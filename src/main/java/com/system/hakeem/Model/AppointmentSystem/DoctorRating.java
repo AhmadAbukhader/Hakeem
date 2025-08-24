@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity(name = "Doctor_Rating")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(schema = "hakeem_schema" , name = "Doctor_Rating")
 public class DoctorRating {
 
     @Id

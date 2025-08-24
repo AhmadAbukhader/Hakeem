@@ -7,12 +7,17 @@ import com.system.hakeem.Dto.UserManagement.SignUpResponse;
 import com.system.hakeem.Dto.UserManagement.SignUpUserDto;
 import com.system.hakeem.Dto.UserManagement.password.ForgotPasswordRequest;
 import com.system.hakeem.Dto.UserManagement.password.ResetPasswordRequest;
+import com.system.hakeem.Model.EmergencySystem.AmbulanceUnit;
+import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Service.UserManagement.AuthService;
 import com.system.hakeem.Service.UserManagement.JwtService;
 import com.system.hakeem.Service.UserManagement.ResetPasswordService;
+import com.system.hakeem.Service.UserManagement.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/auth")
 @RestController
@@ -22,6 +27,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final AuthService authService;
     private final ResetPasswordService resetPasswordService;
+    private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signUp (@RequestBody SignUpUserDto request){
@@ -51,4 +57,5 @@ public class AuthController {
             return ResponseEntity.ok("the password has not been changed , "+e.getMessage());
         }
     }
+
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +24,7 @@ public class PatientAppointmentsDto {
     private String patientUsername ;
     private String doctorUsername ;
 
-    private String doctorLocation ;
+    private Point doctorLocation ;
 
     private LocalDateTime appointmentDate ;
     private AppointmentType appointmentType ;

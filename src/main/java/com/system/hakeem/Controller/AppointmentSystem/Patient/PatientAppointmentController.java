@@ -49,11 +49,10 @@ public class PatientAppointmentController {
     @GetMapping("/patient/doctors/rated")
     @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<List<DoctorDto>> getDoctorsRated(
-            @RequestParam(required = false) String location ,
             @RequestParam(required = false) String specialization ,
             @RequestParam(required = false) Boolean rated,
             Pageable pageable) {
-        List<DoctorDto> doctors = userService.getDoctors(location , specialization ,rated ,pageable);
+        List<DoctorDto> doctors = userService.getDoctors(specialization ,rated ,pageable);
         return ResponseEntity.ok().body(doctors);
     }
 

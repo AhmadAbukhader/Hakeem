@@ -9,14 +9,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.locationtech.jts.geom.Point;
 
-@Table(name = "user")
+
+@Table(schema = "hakeem_schema" , name = "user")
 @Entity
 @Data
 @Builder
@@ -47,7 +46,8 @@ public class User implements UserDetails {
 
     private String specialization;
     private Integer license;
-    private String location;
+    @Column(columnDefinition = "geography(Point,4326)")
+    private Point location;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
