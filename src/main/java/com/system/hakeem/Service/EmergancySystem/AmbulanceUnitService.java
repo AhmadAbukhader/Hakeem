@@ -22,4 +22,8 @@ public class AmbulanceUnitService {
         ambulanceUnitRepository.save(ambulanceUnit);
         return ambulanceUnit;
     }
+
+    public AmbulanceUnit getUnit(String name){
+        return ambulanceUnitRepository.findByUnitName(name);
+    }
 }

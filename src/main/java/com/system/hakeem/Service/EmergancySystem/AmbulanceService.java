@@ -1,6 +1,8 @@
 package com.system.hakeem.Service.EmergancySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceRequest;
+import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceResponse;
+import com.system.hakeem.Dto.EmergencySystem.AmbulanceLocationDto;
 import com.system.hakeem.Model.EmergencySystem.Ambulance;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceLocation;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceStatus;
@@ -10,6 +12,8 @@ import com.system.hakeem.Repository.EmergancySystem.AmbulanceLocationRepository;
 import com.system.hakeem.Repository.EmergancySystem.AmbulanceRepository;
 import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
 import lombok.Builder;
+import org.apache.coyote.BadRequestException;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.Authentication;
@@ -29,25 +33,26 @@ public class AmbulanceService {
     private final AmbulanceUnitRepository ambulanceUnitRepository;
     private final GeometryFactory geometryFactory;
 
-    public AmbulanceLocation updateAmbulanceLocation(int ambulanceId, double latitude, double longitude,
-                                                     double speed, double direction) {
-        Point point = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(longitude, latitude));
+    public AmbulanceLocationDto updateAmbulanceLocation(AmbulanceLocationDto ambulanceLocationDto) {
+        Point point = geometryFactory.createPoint(new Coordinate(ambulanceLocationDto.getLongitude(), ambulanceLocationDto.getLatitude()));
         point.setSRID(4326);
 
-        Ambulance ambulance = ambulanceRepository.findById(ambulanceId)
+        Ambulance ambulance = ambulanceRepository.findById(ambulanceLocationDto.getAmbulanceId())
                 .orElseThrow(() -> new RuntimeException("Ambulance not found"));
 
-        AmbulanceLocation location = new AmbulanceLocation();
+        AmbulanceLocation location = ambulanceLocationRepository.findAmbulanceLocationByAmbulance_AmbulanceId(ambulanceLocationDto.getAmbulanceId());
+
         location.setAmbulance(ambulance);
         location.setLocation(point);
-        location.setSpeed(speed);
-        location.setDirection(direction);
+        location.setSpeed(location.getSpeed());
+        location.setDirection(location.getDirection());
+        ambulanceLocationRepository.save(location);
 
-        return ambulanceLocationRepository.save(location);
+        return ambulanceLocationDto;
     }
 
     public Ambulance findClosestAvailableAmbulance(double latitude, double longitude) {
-        Point userPoint = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(longitude, latitude));
+        Point userPoint = geometryFactory.createPoint(new Coordinate(longitude, latitude));
         userPoint.setSRID(4326);
 
         return ambulanceRepository.findClosestAvailableAmbulance(userPoint.getX(),userPoint.getY());
@@ -59,7 +64,15 @@ public class AmbulanceService {
         return ambulanceRepository.findById(id);
     }
 
-    public Ambulance createAmbulance(CreateAmbulanceRequest request){
+    public Ambulance getAmbulanceByPlateNumber(String plateNumber) throws BadRequestException {
+        Optional<Ambulance> ambulanceOptional = ambulanceRepository.findAmbulanceByPlateNumber(plateNumber);
+        if (ambulanceOptional.isEmpty()){
+            throw new BadRequestException("No Ambulance found with plate number " + plateNumber);
+        }
+        return ambulanceOptional.get();
+    }
+
+    public CreateAmbulanceResponse createAmbulance(CreateAmbulanceRequest request){
         Optional<AmbulanceUnit> unitOptional = ambulanceUnitRepository.findById(request.getUnitId());
         if(unitOptional.isEmpty()){
             throw new RuntimeException("No Such Unit");
@@ -76,7 +89,7 @@ public class AmbulanceService {
                                         .paramedic(paramedic)
                                         .build();
 
-        Point point = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(request.getLongitude(), request.getLatitude()));
+        Point point = geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude()));
         point.setSRID(4326);
 
         AmbulanceLocation ambulanceLocation = AmbulanceLocation.builder()
@@ -87,9 +100,17 @@ public class AmbulanceService {
                 .location(point)
                 .build();
 
-        ambulanceLocationRepository.save(ambulanceLocation);
         ambulanceRepository.save(ambulance);
-        return ambulance;
+        ambulanceLocationRepository.save(ambulanceLocation);
+
+        return CreateAmbulanceResponse.builder()
+                .ambulance_id(ambulance.getAmbulanceId())
+                .paramedicId(ambulance.getParamedic().getId())
+                .ambulanceStatus(ambulance.getStatus())
+                .plateNumber(ambulance.getPlateNumber())
+                .paramedicName(ambulance.getParamedic().getName())
+                .ambulanceUnitId(ambulance.getUnit().getUnitId())
+                .build();
     }
 
 

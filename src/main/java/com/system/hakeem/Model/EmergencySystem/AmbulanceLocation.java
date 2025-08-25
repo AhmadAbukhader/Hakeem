@@ -1,5 +1,6 @@
 package com.system.hakeem.Model.EmergencySystem;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class AmbulanceLocation {
 
     @ManyToOne
     @JoinColumn(name = "ambulance_id", nullable = false)
+    @JsonIgnore
     private Ambulance ambulance;
 
     @Column(nullable = false, columnDefinition = "geography(Point,4326)")

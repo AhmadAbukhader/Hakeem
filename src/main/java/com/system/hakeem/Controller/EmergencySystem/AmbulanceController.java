@@ -1,8 +1,9 @@
 package com.system.hakeem.Controller.EmergencySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceRequest;
+import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceResponse;
+import com.system.hakeem.Dto.EmergencySystem.AmbulanceLocationDto;
 import com.system.hakeem.Model.EmergencySystem.Ambulance;
-import com.system.hakeem.Model.EmergencySystem.AmbulanceLocation;
 import com.system.hakeem.Service.EmergancySystem.AmbulanceService;
 import lombok.Builder;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,24 @@ public class   AmbulanceController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('PARAMEDIC')")
-    public ResponseEntity<Ambulance> createAmbulance(@RequestBody CreateAmbulanceRequest ambulance) {
-        Ambulance response = ambulanceService.createAmbulance(ambulance);
+    public ResponseEntity<CreateAmbulanceResponse> createAmbulance(@RequestBody CreateAmbulanceRequest ambulance) {
+        CreateAmbulanceResponse response = ambulanceService.createAmbulance(ambulance);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{ambulanceId}/location")
-    public ResponseEntity<AmbulanceLocation> updateLocation(
-            @PathVariable int ambulanceId,
-            @RequestParam double latitude,
-            @RequestParam double longitude,
-            @RequestParam double speed,
-            @RequestParam double direction) {
+    @GetMapping("/plate/{plate}")
+    public ResponseEntity<Ambulance> getAmbulance(@PathVariable String plate) {
+        try {
+            return ResponseEntity.ok(ambulanceService.getAmbulanceByPlateNumber(plate));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-        AmbulanceLocation updatedLocation = ambulanceService.updateAmbulanceLocation(
-                ambulanceId, latitude, longitude, speed, direction
-        );
+    @PutMapping("/location")
+    public ResponseEntity<AmbulanceLocationDto> updateLocation(@RequestBody AmbulanceLocationDto location) {
+
+        AmbulanceLocationDto updatedLocation = ambulanceService.updateAmbulanceLocation(location);
         return ResponseEntity.ok(updatedLocation);
     }
 

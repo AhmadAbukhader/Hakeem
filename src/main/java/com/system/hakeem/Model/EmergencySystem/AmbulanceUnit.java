@@ -18,7 +18,7 @@ public class AmbulanceUnit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int unitId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100 , unique = true)
     private String unitName;
 
     private Integer contactNumber;
