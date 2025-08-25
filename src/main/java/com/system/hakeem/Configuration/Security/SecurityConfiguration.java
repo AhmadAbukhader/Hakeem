@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         // this list don`t need authentication
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/ws/**", "/app/**", "/topic/**").permitAll()
                         //any other url need to be authenticated
                         .anyRequest().authenticated()
                 ).sessionManagement(session -> session

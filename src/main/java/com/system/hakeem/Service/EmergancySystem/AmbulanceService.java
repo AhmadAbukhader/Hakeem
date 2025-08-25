@@ -11,6 +11,7 @@ import com.system.hakeem.Model.UserManagement.User;
 import com.system.hakeem.Repository.EmergancySystem.AmbulanceLocationRepository;
 import com.system.hakeem.Repository.EmergancySystem.AmbulanceRepository;
 import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
+import jakarta.transaction.Transactional;
 import lombok.Builder;
 import org.apache.coyote.BadRequestException;
 import org.locationtech.jts.geom.Coordinate;
@@ -33,6 +34,7 @@ public class AmbulanceService {
     private final AmbulanceUnitRepository ambulanceUnitRepository;
     private final GeometryFactory geometryFactory;
 
+    @Transactional
     public AmbulanceLocationDto updateAmbulanceLocation(AmbulanceLocationDto ambulanceLocationDto) {
         Point point = geometryFactory.createPoint(new Coordinate(ambulanceLocationDto.getLongitude(), ambulanceLocationDto.getLatitude()));
         point.setSRID(4326);
@@ -44,10 +46,11 @@ public class AmbulanceService {
 
         location.setAmbulance(ambulance);
         location.setLocation(point);
-        location.setSpeed(location.getSpeed());
-        location.setDirection(location.getDirection());
+        location.setSpeed(ambulanceLocationDto.getSpeed());
+        location.setDirection(ambulanceLocationDto.getDirection());
         ambulanceLocationRepository.save(location);
 
+        System.out.println("Updated DB: " + location.getSpeed() + ", " + location.getDirection());
         return ambulanceLocationDto;
     }
 

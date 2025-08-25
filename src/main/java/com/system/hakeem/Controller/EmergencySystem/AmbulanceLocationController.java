@@ -23,5 +23,4 @@ public class AmbulanceLocationController {
         ambulanceService.updateAmbulanceLocation(location);
         return location;
     }
-
 }
