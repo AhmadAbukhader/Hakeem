@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>22</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -98,6 +98,12 @@
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-spatial</artifactId>
+			<version>6.6.22.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.locationtech.jts</groupId>
+			<artifactId>jts-core</artifactId>
+			<version>1.19.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

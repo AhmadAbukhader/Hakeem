@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Builder
 @RestController
-@RequestMapping("ambulance")
+@RequestMapping("/ambulance")
 public class   AmbulanceController {
 
     private final AmbulanceService ambulanceService;

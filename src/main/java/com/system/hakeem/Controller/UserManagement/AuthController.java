@@ -14,6 +14,7 @@ import com.system.hakeem.Service.UserManagement.JwtService;
 import com.system.hakeem.Service.UserManagement.ResetPasswordService;
 import com.system.hakeem.Service.UserManagement.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signUp (@RequestBody SignUpUserDto request){
+        try{
         SignUpResponse newUser = authService.signUp(request);
         return ResponseEntity.ok(newUser);
+        }catch(DuplicateKeyException e){
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @PostMapping("/login")

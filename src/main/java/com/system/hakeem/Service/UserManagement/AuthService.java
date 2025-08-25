@@ -12,6 +12,7 @@ import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
 import com.system.hakeem.Repository.UserManagement.RoleRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,9 @@ public class AuthService {
             role = roleRepository.save(new Role(Type.valueOf(inputUser.getRole())));
         }
 
-        Point point = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(inputUser.getLongitude(), inputUser.getLongitude()));
+        Point point = geometryFactory.createPoint(
+                new Coordinate(inputUser.getLongitude(), inputUser.getLatitude())
+        );
         point.setSRID(4326);
 
         User user = User.builder()
@@ -60,6 +63,7 @@ public class AuthService {
                 .specialization(inputUser.getSpecialization())
                 .weight(inputUser.getWeight())
                 .build();
+
         userRepository.save(user);
 
         String token = jwtService.generateToken(user);

@@ -11,8 +11,7 @@ public class GeometryConfig {
     @Bean
     public GeometryFactory geometryFactory() {
         // PrecisionModel: default, SRID 4326 (WGS 84)
-        GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
-        return factory;
+        return new GeometryFactory(new PrecisionModel(), 4326);
     }
 
     //SRID : spatial reference , it determines how the data has been written and must be read ,

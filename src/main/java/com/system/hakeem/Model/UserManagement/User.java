@@ -15,7 +15,7 @@ import java.util.List;
 import org.locationtech.jts.geom.Point;
 
 
-@Table(schema = "hakeem_schema" , name = "user")
+@Table(schema = "hakeem_schema" , name = "users")
 @Entity
 @Data
 @Builder

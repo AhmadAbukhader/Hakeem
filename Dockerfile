@@ -1,5 +1,5 @@
 
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+FROM maven:3.9.6-eclipse-temurin-22 AS build
 # Use Maven with Java 21 (Spring Boot 3)
 
 WORKDIR /app
