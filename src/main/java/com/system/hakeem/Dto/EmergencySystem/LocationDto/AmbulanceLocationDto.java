@@ -1,4 +1,4 @@
-package com.system.hakeem.Dto.EmergencySystem;
+package com.system.hakeem.Dto.EmergencySystem.LocationDto;
 
 import lombok.Builder;
 import lombok.Data;

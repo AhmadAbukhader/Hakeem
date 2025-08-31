@@ -1,15 +1,20 @@
 package com.system.hakeem.Service.UserManagement;
 
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorDto;
+import com.system.hakeem.Dto.EmergencySystem.LocationDto.UserLocationDto;
 import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;
 import com.system.hakeem.Repository.AppointmentSystem.DoctorRatingRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -22,6 +27,7 @@ public class UserService {
 
     private final DoctorRatingRepository doctorRatingRepository;
     private final UserRepository userRepository;
+    private final GeometryFactory geometryFactory ;
 
 
     public List<DoctorDto> getDoctors( String specialization, Boolean rated, Pageable pageable){
@@ -55,6 +61,33 @@ public class UserService {
             doctors.sort(Comparator.comparingDouble(DoctorDto::getRating).reversed());
 
         return doctors;
+    }
+
+    public UserLocationDto getUserLocation(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+
+        return UserLocationDto.builder()
+                .userId(user.getId())
+                .latitude(user.getLocation().getX())
+                .longitude(user.getLocation().getY())
+                .build();
+    }
+
+    public UserLocationDto updateUserLocation(double latitude , double longitude){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+
+        Point point = geometryFactory.createPoint(new Coordinate(longitude , latitude));
+        point.setSRID(4326);
+        user.setLocation(point);
+        userRepository.save(user);
+
+        return UserLocationDto.builder()
+                .userId(user.getId())
+                .latitude(user.getLocation().getX())
+                .longitude(user.getLocation().getY())
+                .build();
     }
 
 }

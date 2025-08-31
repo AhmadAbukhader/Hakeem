@@ -2,7 +2,7 @@ package com.system.hakeem.Controller.EmergencySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceRequest;
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceResponse;
-import com.system.hakeem.Dto.EmergencySystem.AmbulanceLocationDto;
+import com.system.hakeem.Dto.EmergencySystem.LocationDto.AmbulanceLocationDto;
 import com.system.hakeem.Model.EmergencySystem.Ambulance;
 import com.system.hakeem.Service.EmergancySystem.AmbulanceService;
 import lombok.Builder;

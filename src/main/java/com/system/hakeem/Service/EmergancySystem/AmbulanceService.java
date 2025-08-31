@@ -2,7 +2,7 @@ package com.system.hakeem.Service.EmergancySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceRequest;
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceResponse;
-import com.system.hakeem.Dto.EmergencySystem.AmbulanceLocationDto;
+import com.system.hakeem.Dto.EmergencySystem.LocationDto.AmbulanceLocationDto;
 import com.system.hakeem.Model.EmergencySystem.Ambulance;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceLocation;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceStatus;

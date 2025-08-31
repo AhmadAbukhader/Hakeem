@@ -1,6 +1,6 @@
 package com.system.hakeem.Controller.EmergencySystem;
 
-import com.system.hakeem.Dto.EmergencySystem.AmbulanceLocationDto;
+import com.system.hakeem.Dto.EmergencySystem.LocationDto.AmbulanceLocationDto;
 import com.system.hakeem.Service.EmergancySystem.AmbulanceService;
 import lombok.Builder;
 import org.springframework.messaging.handler.annotation.MessageMapping;
