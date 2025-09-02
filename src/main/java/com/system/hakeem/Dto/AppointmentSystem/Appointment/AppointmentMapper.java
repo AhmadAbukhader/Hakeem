@@ -17,8 +17,6 @@ public class AppointmentMapper {
                         .appointmentType(app.getAppType())
                         .appointmentStatus(app.getStatus())
                         .doctorId(app.getDoctor().getId())
-                        .patientId(app.getPatient().getId())
-                        .patientUserName(app.getPatient().getUsername())
                         .doctorUserName(app.getDoctor().getUsername())
                         .build()
         ).toList();

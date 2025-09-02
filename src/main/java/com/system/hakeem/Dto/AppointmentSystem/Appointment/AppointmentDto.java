@@ -18,7 +18,5 @@ public class AppointmentDto {
     private AppointmentStatus appointmentStatus;
     private int doctorId ;
     private String doctorUserName;
-    private int patientId ;
-    private String patientUserName;
 
 }
