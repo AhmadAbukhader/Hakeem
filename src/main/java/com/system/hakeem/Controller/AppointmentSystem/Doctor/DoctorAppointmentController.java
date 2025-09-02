@@ -1,5 +1,6 @@
 package com.system.hakeem.Controller.AppointmentSystem.Doctor;
 
+import com.system.hakeem.Dto.AppointmentSystem.Appointment.AppointmentDto;
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentScheduleRequest;
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentsDto;
 import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
@@ -23,8 +24,8 @@ public class DoctorAppointmentController {
     // getting all appointments scheduled by patients and doctors
     @GetMapping("/doctors/scheduled")
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    public ResponseEntity<List<Appointment>> getDoctorsScheduled() {
-        List<Appointment> appointments = appointmentService.getAllScheduledApps();
+    public ResponseEntity<List<AppointmentDto>> getDoctorsScheduled() {
+        List<AppointmentDto> appointments = appointmentService.getAllScheduledApps();
         return ResponseEntity.ok().body(appointments);
     }
 

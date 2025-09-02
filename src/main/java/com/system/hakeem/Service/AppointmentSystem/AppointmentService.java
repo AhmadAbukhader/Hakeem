@@ -1,5 +1,7 @@
 package com.system.hakeem.Service.AppointmentSystem;
 
+import com.system.hakeem.Dto.AppointmentSystem.Appointment.AppointmentDto;
+import com.system.hakeem.Dto.AppointmentSystem.Appointment.AppointmentMapper;
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorAppointmentsDto;
 import com.system.hakeem.Dto.AppointmentSystem.Patient.PatientAppointmentsDto;
 import com.system.hakeem.Model.AppointmentSystem.Appointment;
@@ -7,6 +9,8 @@ import com.system.hakeem.Model.AppointmentSystem.AppointmentStatus;
 import com.system.hakeem.Model.AppointmentSystem.AppointmentType;
 import com.system.hakeem.Model.UserManagement.User;
 import com.system.hakeem.Repository.AppointmentSystem.AppointmentRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,9 +22,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AppointmentService {
-    @Autowired
-    private AppointmentRepository appointmentRepository;
+
+    private final AppointmentRepository appointmentRepository;
+    private final AppointmentMapper appointmentMapper;
 
     public void doctorInsert (LocalDateTime appDateTime) throws DuplicateKeyException {
         Appointment app = appointmentRepository.findByAppointmentDate(appDateTime);
@@ -60,18 +66,21 @@ public class AppointmentService {
 
     }
 
-    public List<Appointment> getAllApps(){
-        return appointmentRepository.findAll();
+    public List<AppointmentDto> getAllApps(){
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointmentMapper.mapAppointments(appointments);
     }
 
-    public List<Appointment> getAllAvailableApps(int id){
-        return appointmentRepository.findByIsAvailableAndDoctorId(true , id);
+    public List<AppointmentDto> getAllAvailableApps(int id){
+        List<Appointment> appointments = appointmentRepository.findByIsAvailableAndDoctorId(true , id);
+        return appointmentMapper.mapAppointments(appointments);
     }
 
-    public List<Appointment> getAllScheduledApps(){
+    public List<AppointmentDto> getAllScheduledApps(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User doctor = (User) auth.getPrincipal();
-        return appointmentRepository.findByIsAvailableAndDoctorId(false , doctor.getId() );
+        List<Appointment> appointments = appointmentRepository.findByIsAvailableAndDoctorId(false , doctor.getId());
+        return appointmentMapper.mapAppointments(appointments);
     }
 
     public List<PatientAppointmentsDto> getPatientApps() {
