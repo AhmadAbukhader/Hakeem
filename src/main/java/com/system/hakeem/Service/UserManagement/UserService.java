@@ -52,7 +52,9 @@ public class UserService {
                         .age(user.getAge())
                         .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
                         .specialization(user.getSpecialization())
-                        .location(user.getLocation())
+                        //.location(user.getLocation())
+                        .latitude(user.getLocation().getX())
+                        .longitude(user.getLocation().getY())
                         .gender(user.getGender())
                         .build()
         ).collect(Collectors.toList());
@@ -88,6 +90,30 @@ public class UserService {
                 .latitude(user.getLocation().getX())
                 .longitude(user.getLocation().getY())
                 .build();
+    }
+
+    public List<DoctorDto> getAllDoctors(){
+        Role role = Role.builder().id(2).role(Type.DOCTOR).build();
+        List<User> users = userRepository.findByRole(role);
+        return users.stream().map(
+                user -> DoctorDto.builder()
+                        .rating(doctorRatingRepository.findAverageRatingByDoctorId(user.getId())
+                                != null ?
+                                doctorRatingRepository.findAverageRatingByDoctorId(user.getId()) : 0 )
+                        .doctorId(user.getId())
+                        .doctorName(user.getName())
+                        .username(user.getUsername())
+                        .dob(user.getDob())
+                        .age(user.getAge())
+                        .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
+                        .specialization(user.getSpecialization())
+                        //.location(user.getLocation())
+                        .latitude(user.getLocation().getX())
+                        .longitude(user.getLocation().getY())
+                        .gender(user.getGender())
+                        .build()
+        ).toList();
+
     }
 
 }
