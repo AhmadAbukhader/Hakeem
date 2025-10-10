@@ -10,4 +10,5 @@ public class HakeemApplication {
 		SpringApplication.run(HakeemApplication.class, args);
 	}
 
+
 }

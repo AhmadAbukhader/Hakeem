@@ -1,18 +1,16 @@
-package com.system.hakeem.Security;
+package com.system.hakeem.Configuration.Security;
 
 
+import com.system.hakeem.Security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,6 +36,13 @@ public class SecurityConfiguration {
                         // this list don`t need authentication
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/ws/**", "/app/**", "/topic/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/webjars/**",
+                                "/v3/api-docs.yaml"
+                        ).permitAll()
                         //any other url need to be authenticated
                         .anyRequest().authenticated()
                 ).sessionManagement(session -> session
