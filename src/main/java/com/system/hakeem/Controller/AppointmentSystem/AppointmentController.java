@@ -21,7 +21,7 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
-    @GetMapping("/available")
+    @GetMapping("/available/{Id}")
     public ResponseEntity<List<AppointmentDto>> getDoctorAvailableAppointments(@PathVariable int Id) {
         // id is for the doctor so the patient can get time slots where doctor
         List<AppointmentDto> appointments = appointmentService.getAllAvailableApps(Id);

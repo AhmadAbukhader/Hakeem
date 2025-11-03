@@ -4,7 +4,6 @@ import com.system.hakeem.Dto.UserManagement.LoginResponse;
 import com.system.hakeem.Dto.UserManagement.LoginUserDto;
 import com.system.hakeem.Dto.UserManagement.SignUpUserDto;
 import com.system.hakeem.Dto.UserManagement.SignUpResponse;
-import com.system.hakeem.Model.EmergencySystem.AmbulanceUnit;
 import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;
@@ -15,13 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

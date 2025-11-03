@@ -29,14 +29,13 @@ public class DoctorAppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
-    // opening slots for scheduling by user
+    // opening slots for scheduling by doctor
     @PostMapping("/doctor/schedule")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public ResponseEntity<DoctorAppointmentScheduleRequest> doctorSchedule(@RequestBody DoctorAppointmentScheduleRequest request) {
         appointmentService.doctorInsert(request.getAppointmentDateTime());
         return ResponseEntity.ok().body(request);
     }
-
 
     //get a doctor all his appointment
     @GetMapping("/doctor/scheduled")
