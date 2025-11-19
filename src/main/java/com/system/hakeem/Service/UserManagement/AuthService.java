@@ -1,9 +1,9 @@
 package com.system.hakeem.Service.UserManagement;
 
-import com.system.hakeem.Dto.UserManagement.LoginResponse;
-import com.system.hakeem.Dto.UserManagement.LoginUserDto;
-import com.system.hakeem.Dto.UserManagement.SignUpUserDto;
-import com.system.hakeem.Dto.UserManagement.SignUpResponse;
+import com.system.hakeem.Dto.UserManagement.AuthDto.LoginResponse;
+import com.system.hakeem.Dto.UserManagement.AuthDto.LoginUserDto;
+import com.system.hakeem.Dto.UserManagement.AuthDto.SignUpUserDto;
+import com.system.hakeem.Dto.UserManagement.AuthDto.SignUpResponse;
 import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;

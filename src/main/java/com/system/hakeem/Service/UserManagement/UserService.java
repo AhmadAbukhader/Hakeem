@@ -115,4 +115,10 @@ public class UserService {
 
     }
 
+    public User getUserInfo(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return  (User) auth.getPrincipal();
+
+    }
+
 }

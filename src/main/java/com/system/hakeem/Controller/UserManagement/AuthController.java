@@ -2,10 +2,10 @@ package com.system.hakeem.Controller.UserManagement;
 
 
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorDto;
-import com.system.hakeem.Dto.UserManagement.LoginResponse;
-import com.system.hakeem.Dto.UserManagement.LoginUserDto;
-import com.system.hakeem.Dto.UserManagement.SignUpResponse;
-import com.system.hakeem.Dto.UserManagement.SignUpUserDto;
+import com.system.hakeem.Dto.UserManagement.AuthDto.LoginResponse;
+import com.system.hakeem.Dto.UserManagement.AuthDto.LoginUserDto;
+import com.system.hakeem.Dto.UserManagement.AuthDto.SignUpResponse;
+import com.system.hakeem.Dto.UserManagement.AuthDto.SignUpUserDto;
 import com.system.hakeem.Dto.UserManagement.password.ForgotPasswordRequest;
 import com.system.hakeem.Dto.UserManagement.password.ResetPasswordRequest;
 import com.system.hakeem.Service.UserManagement.AuthService;
@@ -61,6 +61,7 @@ public class AuthController {
             return ResponseEntity.ok("the password has not been changed , "+e.getMessage());
         }
     }
+
 
     @GetMapping("/doctors")
     public ResponseEntity<List<DoctorDto>> getAllDoctors (){

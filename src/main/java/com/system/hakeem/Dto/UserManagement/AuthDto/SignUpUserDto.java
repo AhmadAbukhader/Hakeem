@@ -1,13 +1,10 @@
-package com.system.hakeem.Dto.UserManagement;
+package com.system.hakeem.Dto.UserManagement.AuthDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
