@@ -4,17 +4,19 @@ import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceRequest;
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceResponse;
 import com.system.hakeem.Dto.EmergencySystem.LocationDto.AmbulanceLocationDto;
 import com.system.hakeem.Model.EmergencySystem.Ambulance;
-import com.system.hakeem.Service.EmergancySystem.AmbulanceService;
-import lombok.Builder;
+import com.system.hakeem.Service.EmergencySystem.AmbulanceService;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
-@Builder
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/ambulance")
-public class   AmbulanceController {
+public class AmbulanceController {
 
     private final AmbulanceService ambulanceService;
 
@@ -31,24 +33,38 @@ public class   AmbulanceController {
     public ResponseEntity<Ambulance> getAmbulance(@PathVariable String plate) {
         try {
             return ResponseEntity.ok(ambulanceService.getAmbulanceByPlateNumber(plate));
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PutMapping("/location")
     public ResponseEntity<AmbulanceLocationDto> updateLocation(@RequestBody AmbulanceLocationDto location) {
-
-        AmbulanceLocationDto updatedLocation = ambulanceService.updateAmbulanceLocation(location);
-        return ResponseEntity.ok(updatedLocation);
+        try {
+            AmbulanceLocationDto updatedLocation = ambulanceService.updateAmbulanceLocation(location);
+            return ResponseEntity.ok(updatedLocation);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/closest")
     public ResponseEntity<Ambulance> findClosestAmbulance(
             @RequestParam double latitude,
             @RequestParam double longitude) {
-        Ambulance ambulance = ambulanceService.findClosestAvailableAmbulance(latitude, longitude);
-        return ResponseEntity.ok(ambulance);
+        try {
+            Ambulance ambulance = ambulanceService.findClosestAvailableAmbulance(latitude, longitude);
+            if (ambulance == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(ambulance);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")

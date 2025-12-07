@@ -1,4 +1,4 @@
-package com.system.hakeem.Repository.EmergancySystem;
+package com.system.hakeem.Repository.EmergencySystem;
 
 import com.system.hakeem.Model.EmergencySystem.AmbulanceLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,3 +7,4 @@ public interface AmbulanceLocationRepository extends JpaRepository<AmbulanceLoca
 
     AmbulanceLocation findAmbulanceLocationByAmbulance_AmbulanceId(int ambulanceId);
 }
+

@@ -1,21 +1,32 @@
-# Ignore build artifacts
+# Maven
 target/
-!target/*.jar
+.mvn/
+mvnw
+mvnw.cmd
 
-# Ignore version control
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
 .git/
 .gitignore
 
-# Ignore IDE settings
-*.iml
-.idea/
-.vscode/
+# Documentation
+*.md
+!README.md
 
-# Ignore logs and temp files
+# Logs
 *.log
-tmp/
-*.tmp
 
-# Ignore OS-specific files
-.DS_Store
-Thumbs.db
+# Temporary files
+*.tmp
+*.bak

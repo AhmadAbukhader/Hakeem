@@ -12,10 +12,12 @@ public class PatientAppointmentScheduleRequest {
   private AppointmentType appointmentType;
   @JsonProperty("appointment_date")
   private LocalDateTime appointmentDateTime;
+  @JsonProperty("doctor_id")
+  private Integer doctorId;
 }
 
-//appointment table
+// appointment table
 /*
-Status         ENUM
-is_available    Boolean
-*/
+ * Status ENUM
+ * is_available Boolean
+ */

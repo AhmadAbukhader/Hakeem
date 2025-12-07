@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: hakeem-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hakeem
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-abu2004khader}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hakeem-network
+
+  # Spring Boot Application Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hakeem-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8089}:8089"
+    environment:
+      # Database Configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hakeem?stringtype=unspecified
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-abu2004khader}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: hakeem_schema
+      SPRING_DATASOURCE_HIKARI_CONNECTION_INIT_SQL: SET search_path TO hakeem_schema,public
+
+      # JWT Configuration
+      SECURITY_JWT_SECRET_KEY: ${JWT_SECRET_KEY:-92f42dd3b0d3c976f4eb4a166b8eb9d825baf2063c1ad612bd7eb6035fd3ce5b}
+      SECURITY_JWT_EXPIRATION_TIME: ${JWT_EXPIRATION_TIME:-3600000}
+
+      # Email Configuration
+      SPRING_MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      SPRING_MAIL_PORT: ${MAIL_PORT:-587}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME:-abukhaderahmad818@gmail.com}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD:-imndqzvjlwsyapmo}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+
+      # Application Configuration
+      SERVER_PORT: 8089
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL:-false}
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: ${LOG_LEVEL_SQL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hakeem-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:8089/actuator/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  hakeem-network:
+    driver: bridge

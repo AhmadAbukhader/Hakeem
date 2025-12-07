@@ -23,18 +23,22 @@ public class DoctorRatingController {
         try {
             doctorRatingService.rate(rating);
             return ResponseEntity.ok(rating);
-        } catch (RuntimeException e) {
-            rating.setDescription(e.getMessage());
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(rating);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/rating")
     public ResponseEntity<List<RatingDTO>> getDoctorRating(@RequestParam String username){
         try {
-            return ResponseEntity.ok(doctorRatingService.getDoctorRatings(username));
+            List<RatingDTO> ratings = doctorRatingService.getDoctorRatings(username);
+            return ResponseEntity.ok(ratings);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

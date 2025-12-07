@@ -1,4 +1,4 @@
-package com.system.hakeem.Service.EmergancySystem;
+package com.system.hakeem.Service.EmergencySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceRequest;
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceResponse;
@@ -8,11 +8,11 @@ import com.system.hakeem.Model.EmergencySystem.AmbulanceLocation;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceStatus;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceUnit;
 import com.system.hakeem.Model.UserManagement.User;
-import com.system.hakeem.Repository.EmergancySystem.AmbulanceLocationRepository;
-import com.system.hakeem.Repository.EmergancySystem.AmbulanceRepository;
-import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
+import com.system.hakeem.Repository.EmergencySystem.AmbulanceLocationRepository;
+import com.system.hakeem.Repository.EmergencySystem.AmbulanceRepository;
+import com.system.hakeem.Repository.EmergencySystem.AmbulanceUnitRepository;
 import jakarta.transaction.Transactional;
-import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Builder
+@RequiredArgsConstructor
 @Service
 public class AmbulanceService {
 
@@ -117,3 +117,4 @@ public class AmbulanceService {
     }
 
 }
+

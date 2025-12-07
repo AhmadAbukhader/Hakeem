@@ -17,10 +17,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleSecurityException(Exception exception) {
-        ProblemDetail errorDetail = null ;
+        ProblemDetail errorDetail = null;
 
         exception.printStackTrace();
-        if(exception instanceof BadCredentialsException) {
+        if (exception instanceof BadCredentialsException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), exception.getMessage());
             errorDetail.setProperty("description", "The username or password is incorrect");
 
@@ -36,6 +36,11 @@ public class GlobalExceptionHandler {
             errorDetail.setProperty("description", "You are not authorized to access this resource");
         }
 
+        if (exception instanceof SecurityException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
+            errorDetail.setProperty("description", exception.getMessage());
+        }
+
         if (exception instanceof SignatureException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
             errorDetail.setProperty("description", "The JWT signature is invalid");
@@ -45,7 +50,7 @@ public class GlobalExceptionHandler {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
             errorDetail.setProperty("description", "The JWT token has expired");
         }
-        if(exception instanceof DuplicateKeyException){
+        if (exception instanceof DuplicateKeyException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
             errorDetail.setProperty("description", "This user already exists");
         }

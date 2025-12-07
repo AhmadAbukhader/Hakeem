@@ -25,31 +25,59 @@ public class DoctorAppointmentController {
     @GetMapping("/doctors/scheduled")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public ResponseEntity<List<AppointmentDto>> getDoctorsScheduled() {
-        List<AppointmentDto> appointments = appointmentService.getAllScheduledApps();
-        return ResponseEntity.ok().body(appointments);
+        try {
+            List<AppointmentDto> appointments = appointmentService.getAllScheduledApps();
+            return ResponseEntity.ok().body(appointments);
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // opening slots for scheduling by doctor
     @PostMapping("/doctor/schedule")
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    public ResponseEntity<DoctorAppointmentScheduleRequest> doctorSchedule(@RequestBody DoctorAppointmentScheduleRequest request) {
-        appointmentService.doctorInsert(request.getAppointmentDateTime());
-        return ResponseEntity.ok().body(request);
+    public ResponseEntity<DoctorAppointmentScheduleRequest> doctorSchedule(
+            @RequestBody DoctorAppointmentScheduleRequest request) {
+        try {
+            appointmentService.doctorInsert(request.getAppointmentDateTime());
+            return ResponseEntity.ok().body(request);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.CONFLICT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    //get a doctor all his appointment
+    // get a doctor all his appointment
     @GetMapping("/doctor/scheduled")
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public ResponseEntity<List<DoctorAppointmentsDto>> getDoctorScheduled() {
-        List<DoctorAppointmentsDto> appointments = appointmentService.getDoctorApps();
-        return ResponseEntity.ok().body(appointments);
+        try {
+            List<DoctorAppointmentsDto> appointments = appointmentService.getDoctorApps();
+            return ResponseEntity.ok().body(appointments);
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/doctor/complete")
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    public ResponseEntity<DoctorAppointmentsDto> doctorCompletedAppointment (@RequestParam int appointmentId) {
-        DoctorAppointmentsDto appointment = appointmentService.updateCompletedAppointment(appointmentId);
-        return ResponseEntity.ok().body(appointment);
+    public ResponseEntity<DoctorAppointmentsDto> doctorCompletedAppointment(@RequestParam int appointmentId) {
+        try {
+            DoctorAppointmentsDto appointment = appointmentService.updateCompletedAppointment(appointmentId);
+            if (appointment == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body(appointment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

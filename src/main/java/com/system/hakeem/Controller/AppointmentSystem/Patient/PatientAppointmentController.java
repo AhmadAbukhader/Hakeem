@@ -26,33 +26,59 @@ public class PatientAppointmentController {
     // patient
     @PostMapping("/patient/schedule")
     @PreAuthorize("hasAnyRole('PATIENT')")
-    public ResponseEntity<PatientAppointmentScheduleRequest> patientSchedule(@RequestBody PatientAppointmentScheduleRequest request) {
-        appointmentService.patientInsert(request.getAppointmentType() , request.getAppointmentDateTime());
-        return ResponseEntity.ok().body(request);
+    public ResponseEntity<PatientAppointmentScheduleRequest> patientSchedule(
+            @RequestBody PatientAppointmentScheduleRequest request) {
+        try {
+            if (request.getDoctorId() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            appointmentService.patientInsert(request.getAppointmentType(), request.getAppointmentDateTime(),
+                    request.getDoctorId());
+            return ResponseEntity.ok().body(request);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/patient/scheduled")
     @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<List<PatientAppointmentsDto>> getPatientScheduled() {
-        List<PatientAppointmentsDto> appointments = appointmentService.getPatientApps();
-        return ResponseEntity.ok().body(appointments);
+        try {
+            List<PatientAppointmentsDto> appointments = appointmentService.getPatientApps();
+            return ResponseEntity.ok().body(appointments);
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // if the user want to cancel an appointment he could cancel it with this
     @PutMapping("/patient/cancel")
     @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<PatientAppointmentsDto> cancelAppointment(@RequestParam int appointmentId) {
-        PatientAppointmentsDto appointment = appointmentService.cancelAppointment(appointmentId);
-        return ResponseEntity.ok().body(appointment);
+        try {
+            PatientAppointmentsDto appointment = appointmentService.cancelAppointment(appointmentId);
+            if (appointment == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body(appointment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/patient/doctors/rated")
     @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<List<DoctorDto>> getDoctorsRated(
-            @RequestParam(required = false) String specialization ,
+            @RequestParam(required = false) String specialization,
             @RequestParam(required = false) Boolean rated,
             Pageable pageable) {
-        List<DoctorDto> doctors = userService.getDoctors(specialization ,rated ,pageable);
+        List<DoctorDto> doctors = userService.getDoctors(specialization, rated, pageable);
         return ResponseEntity.ok().body(doctors);
     }
 

@@ -21,11 +21,14 @@ FROM eclipse-temurin:17-jdk
 WORKDIR /app
 # Set the working directory
 
+# Install wget for health checks
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/target/*.jar app.jar
 # Copy the built JAR from the first stage to this runtime image
 
-EXPOSE 8080
-# Expose port 8080 (Spring Boot default)
+EXPOSE 8089
+# Expose port 8089 (as configured in application.properties)
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
 # Command to run the application

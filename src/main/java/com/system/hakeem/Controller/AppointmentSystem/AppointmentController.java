@@ -17,15 +17,25 @@ public class AppointmentController {
 
     @GetMapping()
     public ResponseEntity<List<AppointmentDto>> getAllAppointments() {
-        List<AppointmentDto> appointments = appointmentService.getAllApps();
-        return ResponseEntity.ok().body(appointments);
+        try {
+            List<AppointmentDto> appointments = appointmentService.getAllApps();
+            return ResponseEntity.ok().body(appointments);
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/available/{Id}")
     public ResponseEntity<List<AppointmentDto>> getDoctorAvailableAppointments(@PathVariable int Id) {
         // id is for the doctor so the patient can get time slots where doctor
-        List<AppointmentDto> appointments = appointmentService.getAllAvailableApps(Id);
-        return ResponseEntity.ok().body(appointments);
+        try {
+            List<AppointmentDto> appointments = appointmentService.getAllAvailableApps(Id);
+            return ResponseEntity.ok().body(appointments);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

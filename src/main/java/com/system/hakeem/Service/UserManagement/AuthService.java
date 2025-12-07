@@ -7,7 +7,7 @@ import com.system.hakeem.Dto.UserManagement.AuthDto.SignUpResponse;
 import com.system.hakeem.Model.UserManagement.Role;
 import com.system.hakeem.Model.UserManagement.Type;
 import com.system.hakeem.Model.UserManagement.User;
-import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
+import com.system.hakeem.Repository.EmergencySystem.AmbulanceUnitRepository;
 import com.system.hakeem.Repository.UserManagement.RoleRepository;
 import com.system.hakeem.Repository.UserManagement.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
 package com.system.hakeem.Model.AppointmentSystem;
 
-
 import com.system.hakeem.Model.UserManagement.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(schema = "hakeem_schema" , name = "Appointment")
+@Table(schema = "hakeem_schema", name = "Appointment")
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,14 +20,13 @@ public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id ;
+    private int id;
 
-    @Column(name = "ADate", unique = true, nullable = false)
+    @Column(name = "ADate", nullable = false)
     private LocalDateTime appointmentDate;
 
     @Column(name = "is_available")
     private Boolean isAvailable;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "APPType")

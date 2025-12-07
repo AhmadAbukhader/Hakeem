@@ -1,12 +1,12 @@
-package com.system.hakeem.Service.EmergancySystem;
+package com.system.hakeem.Service.EmergencySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.CreateAmbulanceUnitRequest;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceUnit;
-import com.system.hakeem.Repository.EmergancySystem.AmbulanceUnitRepository;
-import lombok.Builder;
+import com.system.hakeem.Repository.EmergencySystem.AmbulanceUnitRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Builder
+@RequiredArgsConstructor
 @Service
 public class AmbulanceUnitService {
 
@@ -27,3 +27,4 @@ public class AmbulanceUnitService {
         return ambulanceUnitRepository.findByUnitName(name);
     }
 }
+

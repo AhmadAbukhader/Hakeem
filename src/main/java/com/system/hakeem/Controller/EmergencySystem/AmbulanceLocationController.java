@@ -1,16 +1,16 @@
 package com.system.hakeem.Controller.EmergencySystem;
 
 import com.system.hakeem.Dto.EmergencySystem.LocationDto.AmbulanceLocationDto;
-import com.system.hakeem.Service.EmergancySystem.AmbulanceService;
-import lombok.Builder;
+import com.system.hakeem.Service.EmergencySystem.AmbulanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping
-@Builder
 public class AmbulanceLocationController {
     private final AmbulanceService ambulanceService;
 

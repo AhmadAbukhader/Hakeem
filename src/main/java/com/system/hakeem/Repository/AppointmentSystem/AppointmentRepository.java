@@ -14,6 +14,11 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     Appointment findByAppointmentDate(LocalDateTime appointmentDate);
 
+    Appointment findByAppointmentDateAndDoctorId(LocalDateTime appointmentDate, int doctorId);
+
+    Appointment findByAppointmentDateAndDoctorIdAndIsAvailable(LocalDateTime appointmentDate, int doctorId,
+            Boolean isAvailable);
+
     List<Appointment> findByPatientId(int patientId);
 
     List<Appointment> findByDoctorId(int doctorId);
@@ -22,5 +27,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     List<Appointment> findByIsAvailable(Boolean isAvailable);
 
-    List<Appointment> findByIsAvailableAndDoctorId(Boolean isAvailable , int doctorId);
+    List<Appointment> findByIsAvailableAndDoctorId(Boolean isAvailable, int doctorId);
+
+    List<Appointment> findByStatusAndDoctorId(com.system.hakeem.Model.AppointmentSystem.AppointmentStatus status,
+            int doctorId);
 }
