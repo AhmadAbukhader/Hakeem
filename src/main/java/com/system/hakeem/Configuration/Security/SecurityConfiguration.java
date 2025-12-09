@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                                 .authorizeHttpRequests(auth -> auth
                                                 // this list don`t need authentication
                                                 .requestMatchers("/auth/**").permitAll()
+                                                .requestMatchers("/actuator/health").permitAll()
                                                 .requestMatchers("/ws/**", "/app/**", "/topic/**").permitAll()
                                                 .requestMatchers(
                                                                 "/swagger-ui/**",
