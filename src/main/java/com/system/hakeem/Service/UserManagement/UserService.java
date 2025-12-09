@@ -55,6 +55,7 @@ public class UserService {
                         .latitude(user.getLocation().getX())
                         .longitude(user.getLocation().getY())
                         .gender(user.getGender())
+                        .description(user.getDescription())
                         .build())
                 .collect(Collectors.toList());
 
@@ -110,14 +111,15 @@ public class UserService {
                         .latitude(user.getLocation().getX())
                         .longitude(user.getLocation().getY())
                         .gender(user.getGender())
+                        .description(user.getDescription())
                         .build())
                 .toList();
 
     }
 
-    public User getUserInfo(){
+    public User getUserInfo() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return  (User) auth.getPrincipal();
+        return (User) auth.getPrincipal();
 
     }
 

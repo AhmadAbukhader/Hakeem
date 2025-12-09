@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
 import java.util.Date;
 
@@ -17,14 +16,14 @@ public class DoctorDto {
     private String username;
     private String doctorName;
     private Date dob;
-    private Boolean gender ;
-    private int age ;
-    private long phoneNumber ;
+    private Boolean gender;
+    private int age;
+    private long phoneNumber;
     // private Point location;
     private double longitude;
     private double latitude;
-    private String specialization ;
-    private double rating ;
-
+    private String specialization;
+    private double rating;
+    private String description;
 
 }

@@ -1,6 +1,5 @@
 package com.system.hakeem.Model.UserManagement;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +13,7 @@ import java.util.Date;
 import java.util.List;
 import org.locationtech.jts.geom.Point;
 
-
-@Table(schema = "hakeem_schema" , name = "users")
+@Table(schema = "hakeem_schema", name = "users")
 @Entity
 @Data
 @Builder
@@ -25,7 +23,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id" , nullable = false)
+    @Column(name = "id", nullable = false)
     private int id;
 
     @Column(nullable = false, unique = true)
@@ -46,6 +44,7 @@ public class User implements UserDetails {
 
     private String specialization;
     private Integer license;
+    private String description;
     @Column(columnDefinition = "geography(Point,4326)")
     private Point location;
 
@@ -89,6 +88,5 @@ public class User implements UserDetails {
 
         return List.of(authority);
     }
-
 
 }

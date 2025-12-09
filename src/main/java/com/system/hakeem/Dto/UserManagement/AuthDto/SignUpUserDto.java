@@ -45,6 +45,9 @@ public class SignUpUserDto {
     @JsonProperty("license")
     private Integer license;
 
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("y")
     private double longitude;
 
