@@ -123,4 +123,28 @@ public class UserService {
 
     }
 
+    public List<DoctorDto> searchDoctorsByName(String name, Pageable pageable) {
+        Role role = Role.builder().id(2).role(Type.DOCTOR).build();
+        Page<User> users = userRepository.findAllByRoleAndNameContainingIgnoreCase(role, name, pageable);
+
+        return users.stream().map(
+                user -> DoctorDto.builder()
+                        .rating(doctorRatingRepository.findAverageRatingByDoctorId(user.getId()) != null
+                                ? doctorRatingRepository.findAverageRatingByDoctorId(user.getId())
+                                : 0)
+                        .doctorId(user.getId())
+                        .doctorName(user.getName())
+                        .username(user.getUsername())
+                        .dob(user.getDob())
+                        .age(user.getAge())
+                        .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
+                        .specialization(user.getSpecialization())
+                        .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
+                        .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
+                        .gender(user.getGender())
+                        .description(user.getDescription())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }

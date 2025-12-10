@@ -2,6 +2,7 @@ package com.system.hakeem.Configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,5 +16,22 @@ public class SwaggerConfig {
                         .title("Hakeem API")
                         .version("1.0")
                         .description("API documentation for the Hakeem application"));
+    }
+
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("hakeem-api")
+                .pathsToMatch(
+                        "/appointment/**",
+                        "/doctor/**",
+                        "/auth/**",
+                        "/me/**",
+                        "/ambulance/**",
+                        "/ambulanceUnit/**",
+                        "/user/**"
+                )
+                .pathsToExclude("/api/**") // Exclude Spring Data REST endpoints
+                .build();
     }
 }
