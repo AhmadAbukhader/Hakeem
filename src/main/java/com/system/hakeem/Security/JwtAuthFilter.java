@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -58,17 +59,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
-            Boolean validToken = this.jwtService.isTokenValid(token, userDetails);
+            try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+                Boolean validToken = this.jwtService.isTokenValid(token, userDetails);
 
-            if (validToken) {
-                // set the authentication
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null,
-                        userDetails.getAuthorities());
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } else {
-                logger.debug("Validation failed ");
+                if (validToken) {
+                    // set the authentication
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null,
+                            userDetails.getAuthorities());
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } else {
+                    logger.debug("Token validation failed for user: " + email);
+                }
+            } catch (UsernameNotFoundException e) {
+                logger.debug("User not found for token: " + email + " - Token may be invalid or user was deleted");
+                // Continue filter chain - let Spring Security handle authentication failure
             }
         }
         filterChain.doFilter(request, response);
