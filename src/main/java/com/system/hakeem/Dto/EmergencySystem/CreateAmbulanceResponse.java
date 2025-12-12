@@ -3,7 +3,6 @@ package com.system.hakeem.Dto.EmergencySystem;
 import com.system.hakeem.Model.EmergencySystem.AmbulanceStatus;
 import lombok.Builder;
 import lombok.Data;
-import org.locationtech.jts.geom.Point;
 
 @Data
 @Builder

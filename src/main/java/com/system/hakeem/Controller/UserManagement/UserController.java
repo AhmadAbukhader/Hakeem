@@ -1,7 +1,7 @@
 package com.system.hakeem.Controller.UserManagement;
 
 import com.system.hakeem.Dto.AppointmentSystem.Doctor.DoctorDto;
-import com.system.hakeem.Model.UserManagement.User;
+import com.system.hakeem.Dto.UserManagement.UserDto.MeDto;
 import com.system.hakeem.Service.UserManagement.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,18 +28,18 @@ public class UserController {
     @GetMapping("/info")
     @Operation(summary = "Get current user information", description = "Retrieves the profile information of the currently authenticated user based on the JWT token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved user information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MeDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized - Authentication required"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<User> info() {
+    public ResponseEntity<MeDto> info() {
         try {
-            User user = userService.getUserInfo();
-            if (user == null) {
+            MeDto userInfo = userService.getUserInfoDto();
+            if (userInfo == null) {
                 return ResponseEntity.status(org.springframework.http.HttpStatus.NOT_FOUND).build();
             }
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -73,7 +73,7 @@ public class AuthController {
     })
     public ResponseEntity<String> forgotPassword(
             @Parameter(description = "Username for password reset", required = true) @RequestBody ForgotPasswordRequest request) {
-        String code = resetPasswordService.generateCode(request.getUsername());
+        resetPasswordService.generateCode(request.getUsername());
         return ResponseEntity.ok("the verification code has been sent ");
     }
 

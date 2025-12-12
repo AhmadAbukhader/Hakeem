@@ -33,7 +33,7 @@ public class AmbulanceLocation {
 
     private Double direction;
 
+    @Builder.Default
     private LocalDateTime recordedAt = LocalDateTime.now();
 
 }
-
