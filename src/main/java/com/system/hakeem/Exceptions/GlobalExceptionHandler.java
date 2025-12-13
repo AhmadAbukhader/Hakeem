@@ -54,6 +54,11 @@ public class GlobalExceptionHandler {
             errorDetail.setProperty("description", "This user already exists");
         }
 
+        if (exception instanceof IllegalArgumentException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), exception.getMessage());
+            errorDetail.setProperty("description", exception.getMessage());
+        }
+
         if (errorDetail == null) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
             errorDetail.setProperty("description", "Internal server error.");

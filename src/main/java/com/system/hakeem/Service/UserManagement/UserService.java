@@ -30,15 +30,22 @@ public class UserService {
         private final UserRepository userRepository;
         private final GeometryFactory geometryFactory;
 
-        public List<DoctorDto> getDoctors(String specialization, Boolean rated, Pageable pageable) {
+        public List<DoctorDto> getDoctors(String specialization, Boolean rated, String locationName,
+                        Pageable pageable) {
                 Role role = Role.builder().id(2).role(Type.DOCTOR).build();
                 List<DoctorDto> doctors;
                 Page<User> users;
 
-                if (specialization == null) {
+                if (specialization == null && locationName == null) {
                         users = userRepository.findAllByRole(role, pageable);
-                } else {
+                } else if (specialization != null && locationName == null) {
                         users = userRepository.findAllByRoleAndSpecialization(role, specialization, pageable);
+                } else if (specialization == null && locationName != null) {
+                        users = userRepository.findAllByRoleAndLocationNameContainingIgnoreCase(role, locationName,
+                                        pageable);
+                } else {
+                        users = userRepository.findAllByRoleAndSpecializationAndLocationNameContainingIgnoreCase(role,
+                                        specialization, locationName, pageable);
                 }
                 doctors = users.stream().map(
                                 user -> DoctorDto.builder()
@@ -56,8 +63,8 @@ public class UserService {
                                                 .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
                                                 .specialization(user.getSpecialization())
                                                 // .location(user.getLocation())
-                                                .latitude(user.getLocation().getX())
-                                                .longitude(user.getLocation().getY())
+                                                .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
+                                                .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
                                                 .gender(user.getGender())
                                                 .description(user.getDescription())
                                                 .build())
@@ -75,8 +82,8 @@ public class UserService {
 
                 return UserLocationDto.builder()
                                 .userId(user.getId())
-                                .latitude(user.getLocation().getX())
-                                .longitude(user.getLocation().getY())
+                                .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
+                                .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
                                 .build();
         }
 
@@ -91,8 +98,8 @@ public class UserService {
 
                 return UserLocationDto.builder()
                                 .userId(user.getId())
-                                .latitude(user.getLocation().getX())
-                                .longitude(user.getLocation().getY())
+                                .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
+                                .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
                                 .build();
         }
 
@@ -115,8 +122,8 @@ public class UserService {
                                                 .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
                                                 .specialization(user.getSpecialization())
                                                 // .location(user.getLocation())
-                                                .latitude(user.getLocation().getX())
-                                                .longitude(user.getLocation().getY())
+                                                .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
+                                                .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
                                                 .gender(user.getGender())
                                                 .description(user.getDescription())
                                                 .build())

@@ -21,6 +21,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Page<User> findAllByRoleAndSpecialization(Role role, String Specialization, Pageable pageable);
 
     Page<User> findAllByRoleAndNameContainingIgnoreCase(Role role, String name, Pageable pageable);
+
+    Page<User> findAllByRoleAndLocationNameContainingIgnoreCase(Role role, String locationName, Pageable pageable);
+
+    Page<User> findAllByRoleAndSpecializationAndLocationNameContainingIgnoreCase(Role role, String specialization,
+            String locationName, Pageable pageable);
 }
 
 // @Query(value = """

@@ -64,25 +64,34 @@ public class AppointmentService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
 
-        // Use pessimistic locking to prevent race conditions
-        Appointment appointment = appointmentRepository.findByAppointmentDateAndDoctorIdAndIsAvailable(appDateTime,
-                doctorId, true);
+        // First, check if there's any appointment with this doctor and time (regardless
+        // of availability)
+        Appointment existingAppointment = appointmentRepository.findByAppointmentDateAndDoctorId(appDateTime, doctorId);
 
-        if (appointment == null)
-            throw new IllegalArgumentException("appointment not found or not available");
-
-        // Double-check availability after lock (in case another transaction already
-        // booked it)
-        if (!appointment.getIsAvailable()) {
-            throw new IllegalArgumentException("appointment is no longer available");
+        if (existingAppointment == null) {
+            throw new IllegalArgumentException("Appointment slot not found for this doctor at the specified time");
         }
 
-        // Remove redundant date assignment - it's already set
-        appointment.setIsAvailable(false);
-        appointment.setPatient(user);
-        appointment.setAppType(appType);
-        appointment.setStatus(AppointmentStatus.Scheduled);
-        appointmentRepository.save(appointment);
+        // Check if the appointment is already booked
+        if (existingAppointment.getPatient() != null) {
+            if (existingAppointment.getPatient().getId() == user.getId()) {
+                throw new IllegalArgumentException("You have already booked this appointment");
+            } else {
+                throw new IllegalArgumentException("This appointment slot is already booked by another patient");
+            }
+        }
+
+        // Check if the appointment is marked as available
+        if (!Boolean.TRUE.equals(existingAppointment.getIsAvailable())) {
+            throw new IllegalArgumentException("This appointment slot is no longer available");
+        }
+
+        // Book the appointment
+        existingAppointment.setIsAvailable(false);
+        existingAppointment.setPatient(user);
+        existingAppointment.setAppType(appType);
+        existingAppointment.setStatus(AppointmentStatus.scheduled);
+        appointmentRepository.save(existingAppointment);
 
     }
 
@@ -101,7 +110,7 @@ public class AppointmentService {
         User doctor = (User) auth.getPrincipal();
         // Filter by status=Scheduled instead of isAvailable=false to exclude
         // cancelled/completed appointments
-        List<Appointment> appointments = appointmentRepository.findByStatusAndDoctorId(AppointmentStatus.Scheduled,
+        List<Appointment> appointments = appointmentRepository.findByStatusAndDoctorId(AppointmentStatus.scheduled,
                 doctor.getId());
         return appointmentMapper.mapAppointments(appointments);
     }
@@ -167,7 +176,7 @@ public class AppointmentService {
         }
 
         // Free up the slot for reuse
-        appointment.setStatus(AppointmentStatus.Cancelled);
+        appointment.setStatus(AppointmentStatus.cancelled);
         appointment.setIsAvailable(true);
         appointment.setPatient(null);
         appointment.setAppType(null);
@@ -203,7 +212,7 @@ public class AppointmentService {
             throw new SecurityException("You are not authorized to complete this appointment");
         }
 
-        appointment.setStatus(AppointmentStatus.Completed);
+        appointment.setStatus(AppointmentStatus.completed);
         appointmentRepository.save(appointment);
 
         return DoctorAppointmentsDto.builder()
