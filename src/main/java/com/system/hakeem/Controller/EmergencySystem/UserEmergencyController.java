@@ -33,14 +33,9 @@ public class UserEmergencyController {
     public ResponseEntity<UserLocationDto> updateUserLocation(
             @Parameter(description = "Latitude coordinate", required = true, example = "31.9522") @RequestParam double lat,
             @Parameter(description = "Longitude coordinate", required = true, example = "35.2332") @RequestParam double lng) {
-        try {
-            UserLocationDto location = userService.updateUserLocation(lat, lng);
-            return ResponseEntity.ok(location);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        // IllegalArgumentException is handled by GlobalExceptionHandler
+        UserLocationDto location = userService.updateUserLocation(lat, lng);
+        return ResponseEntity.ok(location);
     }
 
     @GetMapping("/location")
@@ -52,14 +47,10 @@ public class UserEmergencyController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<UserLocationDto> getLocation() {
-        try {
-            UserLocationDto location = userService.getUserLocation();
-            if (location == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            return ResponseEntity.ok(location);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        UserLocationDto location = userService.getUserLocation();
+        if (location == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.ok(location);
     }
 }

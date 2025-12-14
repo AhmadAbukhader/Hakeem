@@ -8,10 +8,9 @@ import lombok.Data;
 @Builder
 public class CreateAmbulanceResponse {
     private int ambulance_id;
-    private int ambulanceUnitId;
     private String plateNumber;
-    private String paramedicName ;
-    private int paramedicId ;
+    private String paramedicName;
+    private int paramedicId;
     private AmbulanceStatus ambulanceStatus;
 
 }

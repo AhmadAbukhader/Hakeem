@@ -9,29 +9,27 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Hakeem API")
-                        .version("1.0")
-                        .description("API documentation for the Hakeem application"));
-    }
+        @Bean
+        public OpenAPI customOpenAPI() {
+                return new OpenAPI()
+                                .info(new Info()
+                                                .title("Hakeem API")
+                                                .version("1.0")
+                                                .description("API documentation for the Hakeem application"));
+        }
 
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("hakeem-api")
-                .pathsToMatch(
-                        "/appointment/**",
-                        "/doctor/**",
-                        "/auth/**",
-                        "/me/**",
-                        "/ambulance/**",
-                        "/ambulanceUnit/**",
-                        "/user/**"
-                )
-                .pathsToExclude("/api/**") // Exclude Spring Data REST endpoints
-                .build();
-    }
+        @Bean
+        public GroupedOpenApi publicApi() {
+                return GroupedOpenApi.builder()
+                                .group("hakeem-api")
+                                .pathsToMatch(
+                                                "/appointment/**",
+                                                "/doctor/**",
+                                                "/auth/**",
+                                                "/me/**",
+                                                "/ambulance/**",
+                                                "/user/**")
+                                .pathsToExclude("/api/**") // Exclude Spring Data REST endpoints
+                                .build();
+        }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -57,6 +58,29 @@ public class GlobalExceptionHandler {
         if (exception instanceof IllegalArgumentException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), exception.getMessage());
             errorDetail.setProperty("description", exception.getMessage());
+        }
+
+        if (exception instanceof BadRequestException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), exception.getMessage());
+            errorDetail.setProperty("description", exception.getMessage());
+        }
+
+        if (exception instanceof NotFoundException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), exception.getMessage());
+            errorDetail.setProperty("description", exception.getMessage());
+        }
+
+        if (exception instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) exception;
+            StringBuilder errors = new StringBuilder();
+            ex.getBindingResult().getFieldErrors().forEach(error -> {
+                if (errors.length() > 0) {
+                    errors.append("; ");
+                }
+                errors.append(error.getField()).append(": ").append(error.getDefaultMessage());
+            });
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "Validation failed");
+            errorDetail.setProperty("description", errors.toString());
         }
 
         if (errorDetail == null) {

@@ -20,16 +20,11 @@ public class Ambulance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ambulanceId;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id", nullable = false)
-    @JsonIgnore
-    private AmbulanceUnit unit;
-
     @Column(nullable = false, unique = true, length = 50)
     private String plateNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "paramedic_id")
+    @OneToOne
+    @JoinColumn(name = "paramedic_id", nullable = false, unique = true)
     @JsonIgnore
     private User paramedic;
 
@@ -38,4 +33,3 @@ public class Ambulance {
     private AmbulanceStatus status;
 
 }
-

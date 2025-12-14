@@ -88,6 +88,9 @@ public class UserService {
         }
 
         public UserLocationDto updateUserLocation(double latitude, double longitude) {
+                // Validate coordinates
+                validateCoordinates(latitude, longitude);
+
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 User user = (User) auth.getPrincipal();
 
@@ -101,6 +104,25 @@ public class UserService {
                                 .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
                                 .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
                                 .build();
+        }
+
+        /**
+         * Validates GPS coordinates are within valid ranges
+         * 
+         * @param latitude  Latitude coordinate (-90 to 90)
+         * @param longitude Longitude coordinate (-180 to 180)
+         * @throws IllegalArgumentException if coordinates are invalid
+         */
+        private void validateCoordinates(double latitude, double longitude) {
+                if (latitude < -90 || latitude > 90) {
+                        throw new IllegalArgumentException(
+                                        String.format("Latitude must be between -90 and 90. Received: %f", latitude));
+                }
+                if (longitude < -180 || longitude > 180) {
+                        throw new IllegalArgumentException(
+                                        String.format("Longitude must be between -180 and 180. Received: %f",
+                                                        longitude));
+                }
         }
 
         public List<DoctorDto> getAllDoctors() {
