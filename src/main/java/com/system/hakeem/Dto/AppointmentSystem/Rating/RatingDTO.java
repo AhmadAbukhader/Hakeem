@@ -15,10 +15,16 @@ import java.time.LocalDate;
 public class RatingDTO {
     @JsonProperty("rating")
     private int rating;
+
     @JsonProperty("description")
     private String description;
+
     @JsonProperty("rated_at")
     private LocalDate ratedAt;
+
     @JsonProperty("username")
     private String username ;
+
+    @JsonProperty("name")
+    private String name ;
 }

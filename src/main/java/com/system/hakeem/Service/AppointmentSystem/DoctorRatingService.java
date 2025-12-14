@@ -57,6 +57,7 @@ public class DoctorRatingService {
                         .rating(e.getRating())
                         .description(e.getDescription())
                         .username(e.getPatient().getUsername())
+                        .name(e.getPatient().getName())
                         .build()
         ).collect(Collectors.toList());
     }
