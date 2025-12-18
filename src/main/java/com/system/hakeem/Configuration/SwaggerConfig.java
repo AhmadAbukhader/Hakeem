@@ -30,7 +30,8 @@ public class SwaggerConfig {
                                                 "/ambulance/**",
                                                 "/user/**",
                                                 "/medical-records/**",
-                                                "/websocket/**")
+                                                "/websocket/**",
+                                                "/emergency/**")
                                 .pathsToExclude("/api/**") // Exclude Spring Data REST endpoints
                                 .build();
         }
