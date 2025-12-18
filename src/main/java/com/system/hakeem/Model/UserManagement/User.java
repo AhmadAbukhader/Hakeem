@@ -47,7 +47,6 @@ public class User implements UserDetails {
     private String description;
     @Column(columnDefinition = "geography(Point,4326)")
     private Point location;
-    private String locationName;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")

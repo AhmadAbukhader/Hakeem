@@ -103,7 +103,7 @@ public class PatientAppointmentController {
 
     @GetMapping("/patient/doctors/rated")
     @PreAuthorize("hasAnyRole('PATIENT')")
-    @Operation(summary = "Get doctors with filters", description = "Retrieves a list of doctors filtered by specialization, location name, and optionally sorted by rating")
+    @Operation(summary = "Get doctors with filters", description = "Retrieves a list of doctors filtered by specialization, location (same city as patient), and optionally sorted by rating")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved doctors", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DoctorDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized - Patient role required"),
@@ -111,10 +111,10 @@ public class PatientAppointmentController {
     })
     public ResponseEntity<List<DoctorDto>> getDoctorsRated(
             @Parameter(description = "Filter by doctor specialization", required = false, example = "Cardiology") @RequestParam(required = false) String specialization,
-            @Parameter(description = "Filter by location name", required = false, example = "New York") @RequestParam(required = false) String locationName,
+            @Parameter(description = "If true, filter doctors by same city as the patient (within 50km radius)", required = false, example = "true") @RequestParam(required = false) Boolean location,
             @Parameter(description = "Sort by rating if true", required = false, example = "true") @RequestParam(required = false) Boolean rated,
             @Parameter(description = "Pagination parameters") Pageable pageable) {
-        List<DoctorDto> doctors = userService.getDoctors(specialization, rated, locationName, pageable);
+        List<DoctorDto> doctors = userService.getDoctors(specialization, rated, location, pageable);
         return ResponseEntity.ok().body(doctors);
     }
 

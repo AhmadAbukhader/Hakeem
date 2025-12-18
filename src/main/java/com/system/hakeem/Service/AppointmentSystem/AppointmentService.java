@@ -130,7 +130,6 @@ public class AppointmentService {
                         .patientName(app.getPatient() != null ? app.getPatient().getName() : null)
                         .doctorUsername(app.getDoctor() != null ? app.getDoctor().getUsername() : null)
                         .patientUsername(app.getPatient() != null ? app.getPatient().getUsername() : null)
-                        .doctorLocation(app.getDoctor() != null ? app.getDoctor().getLocation() : null)
                         .appointmentDate(app.getAppointmentDate())
                         .appointmentType(app.getAppType())
                         .appointmentStatus(app.getStatus())
@@ -190,7 +189,6 @@ public class AppointmentService {
                 .patientName(null) // Patient is now null
                 .doctorUsername(appointment.getDoctor() != null ? appointment.getDoctor().getUsername() : null)
                 .patientUsername(null) // Patient is now null
-                .doctorLocation(appointment.getDoctor() != null ? appointment.getDoctor().getLocation() : null)
                 .appointmentDate(appointment.getAppointmentDate())
                 .appointmentType(null) // Cleared
                 .appointmentStatus(appointment.getStatus())

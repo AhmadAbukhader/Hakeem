@@ -30,22 +30,42 @@ public class UserService {
         private final UserRepository userRepository;
         private final GeometryFactory geometryFactory;
 
-        public List<DoctorDto> getDoctors(String specialization, Boolean rated, String locationName,
+        // Distance in meters for "same city" filtering (50km radius)
+        private static final double SAME_CITY_DISTANCE_METERS = 50000;
+
+        public List<DoctorDto> getDoctors(String specialization, Boolean rated, Boolean location,
                         Pageable pageable) {
                 Role role = Role.builder().id(2).role(Type.DOCTOR).build();
+                int roleId = role.getId();
                 List<DoctorDto> doctors;
                 Page<User> users;
 
-                if (specialization == null && locationName == null) {
+                // Get current patient's location if location filter is requested
+                Double patientLatitude = null;
+                Double patientLongitude = null;
+                if (location != null && location) {
+                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                        User patient = (User) auth.getPrincipal();
+                        if (patient.getLocation() != null) {
+                                patientLatitude = patient.getLocation().getX();
+                                patientLongitude = patient.getLocation().getY();
+                        }
+                }
+
+                boolean useLocationFilter = location != null && location && patientLatitude != null
+                                && patientLongitude != null;
+
+                if (specialization == null && !useLocationFilter) {
                         users = userRepository.findAllByRole(role, pageable);
-                } else if (specialization != null && locationName == null) {
+                } else if (specialization != null && !useLocationFilter) {
                         users = userRepository.findAllByRoleAndSpecialization(role, specialization, pageable);
-                } else if (specialization == null && locationName != null) {
-                        users = userRepository.findAllByRoleAndLocationNameContainingIgnoreCase(role, locationName,
-                                        pageable);
+                } else if (specialization == null && useLocationFilter) {
+                        users = userRepository.findAllByRoleAndLocationWithinDistance(roleId,
+                                        patientLatitude, patientLongitude, SAME_CITY_DISTANCE_METERS, pageable);
                 } else {
-                        users = userRepository.findAllByRoleAndSpecializationAndLocationNameContainingIgnoreCase(role,
-                                        specialization, locationName, pageable);
+                        users = userRepository.findAllByRoleAndSpecializationAndLocationWithinDistance(roleId,
+                                        specialization, patientLatitude, patientLongitude, SAME_CITY_DISTANCE_METERS,
+                                        pageable);
                 }
                 doctors = users.stream().map(
                                 user -> DoctorDto.builder()

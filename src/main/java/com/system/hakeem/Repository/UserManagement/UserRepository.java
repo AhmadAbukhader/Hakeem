@@ -5,6 +5,8 @@ import com.system.hakeem.Model.UserManagement.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,20 +14,33 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByUsername(String username);
+        Optional<User> findByUsername(String username);
 
-    List<User> findByRole(Role role);
+        List<User> findByRole(Role role);
 
-    Page<User> findAllByRole(Role role, Pageable pageable);
+        Page<User> findAllByRole(Role role, Pageable pageable);
 
-    Page<User> findAllByRoleAndSpecialization(Role role, String Specialization, Pageable pageable);
+        Page<User> findAllByRoleAndSpecialization(Role role, String Specialization, Pageable pageable);
 
-    Page<User> findAllByRoleAndNameContainingIgnoreCase(Role role, String name, Pageable pageable);
+        Page<User> findAllByRoleAndNameContainingIgnoreCase(Role role, String name, Pageable pageable);
 
-    Page<User> findAllByRoleAndLocationNameContainingIgnoreCase(Role role, String locationName, Pageable pageable);
+        @Query(value = "SELECT * FROM hakeem_schema.users u WHERE u.role_id = :roleId " +
+                        "AND ST_DWithin(u.location, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :distanceMeters)", nativeQuery = true)
+        Page<User> findAllByRoleAndLocationWithinDistance(@Param("roleId") int roleId,
+                        @Param("latitude") double latitude,
+                        @Param("longitude") double longitude,
+                        @Param("distanceMeters") double distanceMeters,
+                        Pageable pageable);
 
-    Page<User> findAllByRoleAndSpecializationAndLocationNameContainingIgnoreCase(Role role, String specialization,
-            String locationName, Pageable pageable);
+        @Query(value = "SELECT * FROM hakeem_schema.users u WHERE u.role_id = :roleId " +
+                        "AND u.specialization = :specialization " +
+                        "AND ST_DWithin(u.location, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :distanceMeters)", nativeQuery = true)
+        Page<User> findAllByRoleAndSpecializationAndLocationWithinDistance(@Param("roleId") int roleId,
+                        @Param("specialization") String specialization,
+                        @Param("latitude") double latitude,
+                        @Param("longitude") double longitude,
+                        @Param("distanceMeters") double distanceMeters,
+                        Pageable pageable);
 }
 
 // @Query(value = """
