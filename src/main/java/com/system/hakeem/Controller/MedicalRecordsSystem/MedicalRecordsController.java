@@ -70,18 +70,22 @@ public class MedicalRecordsController {
         }
     }
 
-    @GetMapping("/interviews")
-    @PreAuthorize("hasAnyRole('PATIENT')")
-    @Operation(summary = "Get all interviews for authenticated user", description = "Retrieves all medical interview records for the currently authenticated patient user. The user ID is extracted from the JWT token. Returns a list of all interviews with their complete data including questions, answers, symptoms, diagnoses, and doctor recommendations.")
+    @GetMapping("/interviews/{userId}")
+    @PreAuthorize("hasAnyRole('PATIENT' , 'DOCTOR')")
+    @Operation(summary = "Get all interviews for a user", description = "Retrieves all medical interview records for the specified user ID. The user ID is provided as a path variable. Returns a list of all interviews with their complete data including questions, answers, symptoms, diagnoses, and doctor recommendations.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved interviews", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InterviewResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Patient role required"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - Patient or Doctor role required"),
+            @ApiResponse(responseCode = "400", description = "Bad request - Invalid user ID"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<List<InterviewResponse>> getInterviewsByUser() {
+    public ResponseEntity<List<InterviewResponse>> getInterviewsByUser(
+            @Parameter(description = "User ID to retrieve interviews for", required = true, example = "1") @PathVariable Integer userId) {
         try {
-            List<InterviewResponse> interviews = medicalRecordsService.getInterviewsByAuthenticatedUser();
+            List<InterviewResponse> interviews = medicalRecordsService.getInterviewsByUserId(userId);
             return ResponseEntity.ok(interviews);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

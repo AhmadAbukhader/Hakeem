@@ -26,6 +26,9 @@ public class CreateInterviewRequest {
     @JsonProperty("doctor_recommendation")
     private DoctorRecommendationRequestDto doctorRecommendation;
 
+    @JsonProperty("triage")
+    private String triage;
+
     @Data
     @Builder
     @AllArgsConstructor

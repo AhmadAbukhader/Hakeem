@@ -7,16 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Entity
-@Table(schema = "hakeem_schema", name = "interview")
+@Table(schema = "hakeem_schema", name = "risk_factor")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Interview {
+public class RiskFactor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +24,7 @@ public class Interview {
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
     private User patient;
 
-    @Column(name = "started_at", nullable = false)
-    private LocalDateTime startedAt;
-
-    @Column(name = "triage")
-    private String triage;
-
-    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<QuestionAnswer> questionAnswers;
+    @Column(name = "factor_name", nullable = false, length = 255)
+    private String factorName;
 
 }

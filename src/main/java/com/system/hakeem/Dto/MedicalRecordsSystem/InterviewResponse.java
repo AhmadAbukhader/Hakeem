@@ -36,6 +36,9 @@ public class InterviewResponse {
     @JsonProperty("doctor_recommendation")
     private DoctorRecommendationDto doctorRecommendation;
 
+    @JsonProperty("triage")
+    private String triage;
+
     @Data
     @Builder
     @AllArgsConstructor

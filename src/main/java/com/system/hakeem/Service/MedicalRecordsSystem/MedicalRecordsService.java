@@ -51,6 +51,7 @@ public class MedicalRecordsService {
                 Interview interview = Interview.builder()
                                 .patient(patient)
                                 .startedAt(startedAt)
+                                .triage(request.getTriage())
                                 .build();
 
                 final Interview savedInterview = interviewRepository.save(interview);
@@ -165,6 +166,7 @@ public class MedicalRecordsService {
                                 .symptoms(symptomDtos)
                                 .diagnoses(diagnoseDtos)
                                 .doctorRecommendation(recommendationDto)
+                                .triage(interview.getTriage())
                                 .build();
         }
 
@@ -192,15 +194,16 @@ public class MedicalRecordsService {
         }
 
         /**
-         * Get all interviews for the authenticated user
+         * Get all interviews for a specific user by user ID
          */
-        public List<InterviewResponse> getInterviewsByAuthenticatedUser() {
-                // Get the current authenticated user
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                User patient = (User) auth.getPrincipal();
+        public List<InterviewResponse> getInterviewsByUserId(Integer userId) {
+                // Validate userId
+                if (userId == null || userId <= 0) {
+                        throw new IllegalArgumentException("Invalid user ID: " + userId);
+                }
 
-                // Get all interviews for this patient
-                List<Interview> interviews = interviewRepository.findByPatientId(patient.getId());
+                // Get all interviews for this user
+                List<Interview> interviews = interviewRepository.findByPatientId(userId);
 
                 if (interviews.isEmpty()) {
                         return new ArrayList<>();

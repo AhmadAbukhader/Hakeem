@@ -46,14 +46,60 @@ public class UserService {
                 if (location != null && location) {
                         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                         User patient = (User) auth.getPrincipal();
+                        // #region agent log
+                        try {
+                                java.io.FileWriter fw = new java.io.FileWriter(
+                                                "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log",
+                                                true);
+                                fw.write(String.format(
+                                                "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:46\",\"message\":\"Patient location check\",\"data\":{\"patientId\":%d,\"locationIsNull\":%s,\"locationX\":%s,\"locationY\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"A,D\"}\n",
+                                                System.currentTimeMillis(),
+                                                java.util.UUID.randomUUID().toString().substring(0, 8),
+                                                System.currentTimeMillis(), patient.getId(),
+                                                patient.getLocation() == null,
+                                                patient.getLocation() != null ? patient.getLocation().getX() : "null",
+                                                patient.getLocation() != null ? patient.getLocation().getY() : "null"));
+                                fw.close();
+                        } catch (Exception e) {
+                        }
+                        // #endregion
                         if (patient.getLocation() != null) {
                                 patientLatitude = patient.getLocation().getX();
                                 patientLongitude = patient.getLocation().getY();
+                                // #region agent log
+                                try {
+                                        java.io.FileWriter fw = new java.io.FileWriter(
+                                                        "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log",
+                                                        true);
+                                        fw.write(String.format(
+                                                        "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:52\",\"message\":\"Patient coordinates extracted\",\"data\":{\"patientLat\":%s,\"patientLon\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"B\"}\n",
+                                                        System.currentTimeMillis(),
+                                                        java.util.UUID.randomUUID().toString().substring(0, 8),
+                                                        System.currentTimeMillis(), patientLatitude, patientLongitude));
+                                        fw.close();
+                                } catch (Exception e) {
+                                }
+                                // #endregion
                         }
                 }
 
                 boolean useLocationFilter = location != null && location && patientLatitude != null
                                 && patientLongitude != null;
+                // #region agent log
+                try {
+                        java.io.FileWriter fw = new java.io.FileWriter(
+                                        "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log", true);
+                        fw.write(String.format(
+                                        "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:55\",\"message\":\"Query selection\",\"data\":{\"useLocationFilter\":%s,\"specialization\":%s,\"patientLat\":%s,\"patientLon\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"C\"}\n",
+                                        System.currentTimeMillis(),
+                                        java.util.UUID.randomUUID().toString().substring(0, 8),
+                                        System.currentTimeMillis(), useLocationFilter,
+                                        specialization != null ? "\"" + specialization + "\"" : "null", patientLatitude,
+                                        patientLongitude));
+                        fw.close();
+                } catch (Exception e) {
+                }
+                // #endregion
 
                 if (specialization == null && !useLocationFilter) {
                         users = userRepository.findAllByRole(role, pageable);
@@ -67,27 +113,101 @@ public class UserService {
                                         specialization, patientLatitude, patientLongitude, SAME_CITY_DISTANCE_METERS,
                                         pageable);
                 }
+                // #region agent log
+                try {
+                        java.io.FileWriter fw = new java.io.FileWriter(
+                                        "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log", true);
+                        fw.write(String.format(
+                                        "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:69\",\"message\":\"Query executed\",\"data\":{\"resultCount\":%d,\"useLocationFilter\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"C,E\"}\n",
+                                        System.currentTimeMillis(),
+                                        java.util.UUID.randomUUID().toString().substring(0, 8),
+                                        System.currentTimeMillis(), users.getContent().size(), useLocationFilter));
+                        fw.close();
+                } catch (Exception e) {
+                }
+                // #endregion
                 doctors = users.stream().map(
-                                user -> DoctorDto.builder()
-                                                .rating(doctorRatingRepository
-                                                                .findAverageRatingByDoctorId(user.getId()) != null
-                                                                                ? doctorRatingRepository
-                                                                                                .findAverageRatingByDoctorId(
-                                                                                                                user.getId())
-                                                                                : 0)
-                                                .doctorId(user.getId())
-                                                .doctorName(user.getName())
-                                                .username(user.getUsername())
-                                                .dob(user.getDob())
-                                                .age(user.getAge())
-                                                .phoneNumber(user.getPhoneNumber() != null ? user.getPhoneNumber() : 0L)
-                                                .specialization(user.getSpecialization())
-                                                // .location(user.getLocation())
-                                                .latitude(user.getLocation() != null ? user.getLocation().getX() : 0)
-                                                .longitude(user.getLocation() != null ? user.getLocation().getY() : 0)
-                                                .gender(user.getGender())
-                                                .description(user.getDescription())
-                                                .build())
+                                user -> {
+                                        // #region agent log
+                                        try {
+                                                java.io.FileWriter fw = new java.io.FileWriter(
+                                                                "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log",
+                                                                true);
+                                                fw.write(String.format(
+                                                                "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:70\",\"message\":\"Mapping doctor to DTO\",\"data\":{\"userId\":%d,\"username\":\"%s\",\"locationIsNull\":%s,\"locationX\":%s,\"locationY\":%s,\"useLocationFilter\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"A,C,E\"}\n",
+                                                                System.currentTimeMillis(),
+                                                                java.util.UUID.randomUUID().toString().substring(0, 8),
+                                                                System.currentTimeMillis(), user.getId(),
+                                                                user.getUsername(), user.getLocation() == null,
+                                                                user.getLocation() != null ? user.getLocation().getX()
+                                                                                : "null",
+                                                                user.getLocation() != null ? user.getLocation().getY()
+                                                                                : "null",
+                                                                useLocationFilter));
+                                                fw.close();
+                                        } catch (Exception e) {
+                                        }
+                                        // #endregion
+                                        double lat = user.getLocation() != null ? user.getLocation().getX() : 0;
+                                        double lon = user.getLocation() != null ? user.getLocation().getY() : 0;
+                                        // #region agent log
+                                        try {
+                                                java.io.FileWriter fw = new java.io.FileWriter(
+                                                                "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log",
+                                                                true);
+                                                fw.write(String.format(
+                                                                "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:75\",\"message\":\"Extracted coordinates\",\"data\":{\"userId\":%d,\"extractedLat\":%s,\"extractedLon\":%s,\"pointX\":%s,\"pointY\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"B\"}\n",
+                                                                System.currentTimeMillis(),
+                                                                java.util.UUID.randomUUID().toString().substring(0, 8),
+                                                                System.currentTimeMillis(), user.getId(), lat, lon,
+                                                                user.getLocation() != null ? user.getLocation().getX()
+                                                                                : "null",
+                                                                user.getLocation() != null ? user.getLocation().getY()
+                                                                                : "null"));
+                                                fw.close();
+                                        } catch (Exception e) {
+                                        }
+                                        // #endregion
+                                        DoctorDto dto = DoctorDto.builder()
+                                                        .rating(doctorRatingRepository
+                                                                        .findAverageRatingByDoctorId(
+                                                                                        user.getId()) != null
+                                                                                                        ? doctorRatingRepository
+                                                                                                                        .findAverageRatingByDoctorId(
+                                                                                                                                        user.getId())
+                                                                                                        : 0)
+                                                        .doctorId(user.getId())
+                                                        .doctorName(user.getName())
+                                                        .username(user.getUsername())
+                                                        .dob(user.getDob())
+                                                        .age(user.getAge())
+                                                        .phoneNumber(user.getPhoneNumber() != null
+                                                                        ? user.getPhoneNumber()
+                                                                        : 0L)
+                                                        .specialization(user.getSpecialization())
+                                                        // .location(user.getLocation())
+                                                        .latitude(lat)
+                                                        .longitude(lon)
+                                                        .gender(user.getGender())
+                                                        .description(user.getDescription())
+                                                        .build();
+                                        // #region agent log
+                                        try {
+                                                java.io.FileWriter fw = new java.io.FileWriter(
+                                                                "c:\\Users\\HP\\Desktop\\Hakeem Project\\hakeem\\.cursor\\debug.log",
+                                                                true);
+                                                fw.write(String.format(
+                                                                "{\"id\":\"log_%d_%s\",\"timestamp\":%d,\"location\":\"UserService.java:90\",\"message\":\"DTO built\",\"data\":{\"doctorId\":%d,\"dtoLatitude\":%s,\"dtoLongitude\":%s},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"B,D\"}\n",
+                                                                System.currentTimeMillis(),
+                                                                java.util.UUID.randomUUID().toString().substring(0, 8),
+                                                                System.currentTimeMillis(), dto.getDoctorId(),
+                                                                dto.getLatitude(), dto.getLongitude()));
+                                                fw.close();
+                                        } catch (Exception e) {
+                                        }
+                                        // #endregion
+                                        return dto;
+                                })
                                 .collect(Collectors.toList());
 
                 if (rated != null && rated)
