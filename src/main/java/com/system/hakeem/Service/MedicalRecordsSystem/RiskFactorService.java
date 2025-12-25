@@ -69,14 +69,6 @@ public class RiskFactorService {
             throw new IllegalArgumentException("Invalid patient ID: " + patientId);
         }
 
-        // Verify that the current user is requesting their own risk factors
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) auth.getPrincipal();
-
-        if (patientId != currentUser.getId()) {
-            throw new IllegalArgumentException("You can only view your own risk factors");
-        }
-
         List<RiskFactor> riskFactors = riskFactorRepository.findByPatientId(patientId);
 
         return riskFactors.stream()

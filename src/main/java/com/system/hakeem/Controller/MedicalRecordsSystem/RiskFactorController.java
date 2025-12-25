@@ -48,7 +48,7 @@ public class RiskFactorController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR' , 'PARAMEDIC')")
     @Operation(summary = "Get risk factor by ID", description = "Retrieves a risk factor by its unique ID. Patients can only access their own risk factors.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Risk factor found successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RiskFactorResponse.class))),
@@ -71,7 +71,7 @@ public class RiskFactorController {
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR', 'PARAMEDIC')")
     @Operation(summary = "Get all risk factors for a patient", description = "Retrieves all risk factors for the specified patient ID. Patients can only view their own risk factors.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved risk factors", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RiskFactorResponse.class))),
