@@ -39,6 +39,7 @@ public class EmergencyService {
         private final AmbulanceService ambulanceService;
         private final GeometryFactory geometryFactory;
         private final SimpMessagingTemplate messagingTemplate;
+        private final VoiceCallService voiceCallService;
 
         /**
          * Creates a new emergency request, finds closest available ambulance,
@@ -100,6 +101,9 @@ public class EmergencyService {
                 // Send patient location to paramedic via WebSocket
                 sendPatientLocationToParamedic(closestAmbulance, patient, requestDto.getLatitude(),
                                 requestDto.getLongitude());
+
+                // Initiate voice call to notify paramedic about the emergency request
+                initiateParamedicVoiceCall(closestAmbulance, patient, emergencyRequest.getRequestId());
 
                 logger.info("Emergency request created: requestId={}, patientId={}, ambulanceId={}",
                                 emergencyRequest.getRequestId(), patient.getId(), closestAmbulance.getAmbulanceId());
@@ -195,6 +199,46 @@ public class EmergencyService {
                         logger.error("Error sending patient location to paramedic: {}", e.getMessage(), e);
                         // Don't throw exception - WebSocket failure shouldn't break the request
                         // creation
+                }
+        }
+
+        /**
+         * Initiates a voice call to notify paramedic about the emergency request.
+         * Uses Twilio API to call the paramedic's phone and play an emergency
+         * notification.
+         */
+        private void initiateParamedicVoiceCall(Ambulance ambulance, User patient, Integer requestId) {
+                try {
+                        User paramedic = ambulance.getParamedic();
+                        if (paramedic == null) {
+                                logger.warn("Cannot send voice call: no paramedic assigned to ambulanceId={}",
+                                                ambulance.getAmbulanceId());
+                                return;
+                        }
+
+                        Long phoneNumber = paramedic.getPhoneNumber();
+                        if (phoneNumber == null) {
+                                logger.warn("Cannot send voice call: paramedic phone number not available. paramedicId={}, ambulanceId={}",
+                                                paramedic.getId(), ambulance.getAmbulanceId());
+                                return;
+                        }
+
+                        String callSid = voiceCallService.initiateEmergencyCall(
+                                        phoneNumber.toString(),
+                                        patient.getName() != null ? patient.getName() : "Unknown Patient",
+                                        requestId);
+
+                        if (callSid != null) {
+                                logger.info("Voice call notification sent to paramedic: paramedicId={}, phone={}, callSid={}, requestId={}",
+                                                paramedic.getId(), phoneNumber, callSid, requestId);
+                        } else {
+                                logger.warn("Voice call failed but emergency request created successfully: paramedicId={}, requestId={}",
+                                                paramedic.getId(), requestId);
+                        }
+                } catch (Exception e) {
+                        // Don't fail the emergency request if voice call fails
+                        logger.error("Failed to send voice call notification, but emergency request created successfully: requestId={}, error={}",
+                                        requestId, e.getMessage(), e);
                 }
         }
 

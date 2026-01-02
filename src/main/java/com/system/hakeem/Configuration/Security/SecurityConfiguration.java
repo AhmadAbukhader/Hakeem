@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                                                 .requestMatchers("/auth/**").permitAll()
                                                 .requestMatchers("/actuator/health").permitAll()
                                                 .requestMatchers("/ws/**", "/app/**", "/topic/**").permitAll()
+                                                // Twilio webhook endpoints - must be public for Twilio to access
+                                                .requestMatchers("/voice/**").permitAll()
                                                 .requestMatchers(
                                                                 "/swagger-ui/**",
                                                                 "/swagger-ui.html",
