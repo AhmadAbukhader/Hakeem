@@ -125,7 +125,8 @@ public class VoiceCallService {
 
     /**
      * Formats phone number to include country code if missing.
-     * Assumes Palestinian numbers (+970) if no country code provided.
+     * Detects US numbers (starting with 1, 11 digits) and formats as +1XXXXXXXXXX.
+     * Assumes Palestinian numbers (+970) for other numbers if no country code provided.
      *
      * @param phoneNumber The phone number to format
      * @return Formatted phone number with country code
@@ -143,9 +144,14 @@ public class VoiceCallService {
             return cleaned;
         }
 
+        // Check if it's a US number (starts with 1 and has 11 digits: 1XXXXXXXXXX)
+        if (cleaned.startsWith("1") && cleaned.length() == 11) {
+            return "+" + cleaned; // US number: +1XXXXXXXXXX
+        }
+
         // Check if it already starts with country code (970 for Palestine)
         if (cleaned.startsWith("970") && cleaned.length() >= 12) {
-            // Already has country code, just add +
+            // Already has Palestinian country code, just add +
             return "+" + cleaned;
         }
 
@@ -160,7 +166,7 @@ public class VoiceCallService {
             cleaned = cleaned.substring(2);
         }
 
-        // Add Palestinian country code
+        // Default: Assume Palestinian number and add country code
         cleaned = "+970" + cleaned;
 
         return cleaned;
