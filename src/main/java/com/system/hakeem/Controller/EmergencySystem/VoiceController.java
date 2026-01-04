@@ -61,8 +61,8 @@ public class VoiceController {
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<Response>" +
                         "<Say voice=\"alice\" language=\"en-US\">" +
+                        "Hello from Palestine. Thanks for helping uncle Adel Thabata. " +
                         "Emergency alert. You have been assigned a new emergency request. " +
-                        "Patient name: %s. Request ID: %d. " +
                         "Please check your application immediately for patient location and details. " +
                         "This call will now end." +
                         "</Say>" +
