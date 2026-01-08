@@ -40,9 +40,10 @@ public class VoiceController {
      * @param requestId   Emergency request ID (passed from VoiceCallService)
      * @return TwiML XML response that Twilio will execute
      */
-    @GetMapping(value = "/emergency-notification", produces = MediaType.APPLICATION_XML_VALUE)
+    @RequestMapping(value = "/emergency-notification", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_XML_VALUE)
     @Operation(summary = "Twilio TwiML webhook for emergency notifications", description = "This endpoint is called by Twilio when a paramedic answers an emergency notification call. "
             +
+            "Twilio sends POST requests to this endpoint. " +
             "Returns TwiML XML that instructs Twilio to play an emergency alert message. " +
             "This endpoint should NOT be called directly by users - it's for Twilio webhooks only.")
     @ApiResponses(value = {
@@ -57,17 +58,18 @@ public class VoiceController {
 
         // TwiML XML that Twilio will execute
         // This plays a voice message to the paramedic when they answer the call
+        String patientNameSafe = escapeXml(patientName != null ? patientName : "Unknown");
         String twiml = String.format(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<Response>" +
                         "<Say voice=\"alice\" language=\"en-US\">" +
-                        "Hello from Palestine. Thanks for helping uncle Adel Thabata. " +
                         "Emergency alert. You have been assigned a new emergency request. " +
+                        "Patient name: %s. Request ID: %d. " +
                         "Please check your application immediately for patient location and details. " +
                         "This call will now end." +
                         "</Say>" +
                         "</Response>",
-                escapeXml(patientName != null ? patientName : "Unknown"),
+                patientNameSafe,
                 requestId);
 
         logger.debug("Returning TwiML response for requestId={}", requestId);
